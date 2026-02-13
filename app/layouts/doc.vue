@@ -1,6 +1,6 @@
 <template>
     <UDashboardGroup>
-        <UDashboardSidebar resizable collapsible :ui="{ root: 'w-auto', header: 'border-b border-default' }">
+        <UDashboardSidebar resizable collapsible class="bg-elevated/25" :ui="{ root: 'w-auto', header: 'border-b border-default' }">
             <template #header="{ collapsed }">
                 <div v-if="!collapsed" class="px-2.5">
                     <AppLogo class="h-5 w-auto shrink-0" />
@@ -14,25 +14,7 @@
           popover />
             </template>
         </UDashboardSidebar>
-        <UDashboardPanel>
-            <template #header>
-                <UDashboardNavbar title="Dashboard">
-                    <template #leading>
-                        <UDashboardSidebarCollapse />
-                    </template>
-                    <template #trailing>
-                        <!-- <UBadge label="4" variant="subtle" /> -->
-                    </template>
-                    <template #right>
-                        <UColorModeButton />
-                        <UserMenu />
-                    </template>
-                </UDashboardNavbar>
-            </template>
-            <template #body>
-                <slot />
-            </template>
-        </UDashboardPanel>
+        <slot />
     </UDashboardGroup>
 </template>
 <script setup lang="ts">
