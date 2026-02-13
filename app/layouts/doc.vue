@@ -25,11 +25,12 @@ const items: NavigationMenuItem[][] = [
         {
             label: 'Platform Overview',
             icon: 'i-lucide-book-open',
-            to: '/documentation'
+            to: '/documentation/platform-overview'
         }, 
         {
             label: 'System Architecture',
-            icon: 'i-lucide-server'
+            icon: 'i-lucide-server',
+            to: '/documentation/system-architecture'
         }, 
         {
             label: 'Module Reference',

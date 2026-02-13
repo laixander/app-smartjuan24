@@ -102,7 +102,7 @@ const items: NavigationMenuItem[][] = [
         {
             label: 'Documentation',
             icon: 'i-lucide-book-marked',
-            to: '/documentation',
+            to: '/documentation/platform-overview',
             target: '_blank'
         }
     ]

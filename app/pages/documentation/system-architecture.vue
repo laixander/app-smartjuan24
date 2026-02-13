@@ -1,7 +1,7 @@
 <template>
     <UDashboardPanel>
         <template #header>
-            <UDashboardNavbar title="Dashboard">
+            <UDashboardNavbar title="Platform Overview">
                 <template #leading>
                     <UDashboardSidebarCollapse />
                 </template>
@@ -15,12 +15,13 @@
             </UDashboardNavbar>
         </template>
         <template #body>
-            <Hero />
+            <div>
+                System Architecture content goes here
+            </div>
         </template>
     </UDashboardPanel>
 </template>
 <script setup lang="ts">
-import Hero from '~/components/documentation/Hero.vue';
 definePageMeta({
     layout: 'doc'
 })
