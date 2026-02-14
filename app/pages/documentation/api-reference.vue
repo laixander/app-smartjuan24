@@ -1,7 +1,7 @@
 <template>
     <UDashboardPanel>
         <template #header>
-            <UDashboardNavbar title="System Architecture">
+            <UDashboardNavbar title="API Reference">
                 <template #leading>
                     <UDashboardSidebarCollapse />
                 </template>
@@ -16,7 +16,7 @@
         </template>
         <template #body>
             <div>
-                System Architecture content goes here
+                API Reference content goes here
             </div>
         </template>
     </UDashboardPanel>

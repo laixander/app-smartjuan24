@@ -34,27 +34,33 @@ const items: NavigationMenuItem[][] = [
         }, 
         {
             label: 'Module Reference',
-            icon: 'i-lucide-layers'
+            icon: 'i-lucide-layers',
+            to: '/documentation/module-reference'
         },
         {
             label: 'Data Models & Schema',
-            icon: 'i-lucide-database'
+            icon: 'i-lucide-database',
+            to: '/documentation/data-models'
         },
         {
             label: 'Workflow Engine',
-            icon: 'i-lucide-workflow'
+            icon: 'i-lucide-workflow',
+            to: '/documentation/workflow-engine'
         },
         {
             label: 'API Reference',
-            icon: 'i-lucide-code'
+            icon: 'i-lucide-code',
+            to: '/documentation/api-reference'
         },
         {
             label: 'Design Guidelines',
-            icon: 'i-lucide-palette'
+            icon: 'i-lucide-palette',
+            to: '/documentation/design-guidelines'
         },
         {
             label: 'Changelog',
-            icon: 'i-lucide-clock'
+            icon: 'i-lucide-clock',
+            to: '/documentation/changelog'
         }
     ]
 ]

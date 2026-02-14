@@ -1,7 +1,7 @@
 <template>
     <UDashboardPanel>
         <template #header>
-            <UDashboardNavbar title="System Architecture">
+            <UDashboardNavbar title="Changelog">
                 <template #leading>
                     <UDashboardSidebarCollapse />
                 </template>
@@ -16,7 +16,7 @@
         </template>
         <template #body>
             <div>
-                System Architecture content goes here
+                Changelog content goes here
             </div>
         </template>
     </UDashboardPanel>
