@@ -1,17 +1,18 @@
 <template>
     <UCard>
-        <div>
-            <UBadge :icon="icon" :color="color" size="lg" variant="soft" :ui="{ base: 'p-2.5 rounded-lg mb-2' }" />
-
-            <h3 class="text-sm font-bold text-toned uppercase mb-1">
-                {{ title }}
-            </h3>
+        <div class="space-y-3">
+            <header>
+                <UBadge :icon="icon" :color="color" size="lg" variant="soft" :ui="{ base: 'p-2.5 rounded-lg mb-2' }" />
+                <h3 class="text-sm font-bold text-toned uppercase mb-1">
+                    {{ title }}
+                </h3>
+            </header>
 
             <p :class="valueClasses">
                 {{ value }}
             </p>
 
-            <p class="text-sm text-dimmed mt-1">
+            <p class="text-sm text-dimmed">
                 {{ subtitle }}
             </p>
         </div>

@@ -17,11 +17,7 @@
         <template #body>
             <Welcome />
             <div class="grid grid-cols-6 gap-4">
-                <StatCard
-                    v-for="stat in stats"
-                    :key="stat.title"
-                    v-bind="stat"
-                />
+                <StatCard v-for="stat in stats" :key="stat.title" v-bind="stat" />
             </div>
         </template>
     </UDashboardPanel>
@@ -72,5 +68,5 @@ const stats = [
         icon: "i-lucide-rotate-ccw",
         color: "orange",
     },
-];
+] as const;
 </script>

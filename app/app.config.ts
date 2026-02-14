@@ -24,6 +24,11 @@ export default defineAppConfig({
             gray: 'gray',
             zinc: 'zinc',
             stone: 'stone'
-        }
+        },
+        card: {
+            slots: {
+                root: 'rounded-2xl overflow-hidden',
+            },
+        },
     }
 })

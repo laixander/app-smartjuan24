@@ -10,13 +10,15 @@
             Good Morning, Mayor Rodriguez
         </div>
         <div class="text-sm text-white/90 leading-relaxed">
-            Here's your city overview for February 9, 2026. You have <UBadge label="7 pending approvals" variant="soft" :ui="uiBadgeConfig" /> and <UBadge label="₱2.4M in revenue today" variant="soft" :ui="uiBadgeConfig" />
+            Here's your city overview for February 9, 2026. You have
+            <UBadge label="7 pending approvals" variant="soft" :ui="uiBadgeConfig" /> and
+            <UBadge label="₱2.4M in revenue today" variant="soft" :ui="uiBadgeConfig" />
         </div>
     </UCard>
 </template>
 <script setup lang="ts">
 const uiCardConfig = {
-    root: 'bg-linear-to-r from-primary-700 to-primary rounded-2xl',
+    root: 'bg-linear-to-r from-primary-700 to-primary',
     body: 'relative',
 }
 
