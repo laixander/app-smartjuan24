@@ -1,7 +1,7 @@
 <template>
     <UDashboardPanel>
         <template #header>
-            <UDashboardNavbar title="Dashboard">
+            <UDashboardNavbar title="Executive Dashboard">
                 <template #leading>
                     <UDashboardSidebarCollapse />
                 </template>
@@ -16,56 +16,61 @@
         </template>
         <template #body>
             <Welcome />
-            <div class="grid grid-cols-6 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <StatCard v-for="stat in stats" :key="stat.title" v-bind="stat" />
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <RevenueTrend />
+                <BusinessGrowth />
             </div>
         </template>
     </UDashboardPanel>
 </template>
 <script setup lang="ts">
 import Welcome from '~/components/Welcome.vue';
-
+import RevenueTrend from '~/components/chart/RevenueTrend.vue';
+import BusinessGrowth from '~/components/chart/BusinessGrowth.vue';
 const stats = [
     {
-        title: "Revenue",
-        value: "₱2.4M",
-        subtitle: "+15% from yesterday",
+        title: "Total City Revenue",
+        value: "₱142.8M",
+        subtitle: "vs last year",
         icon: "i-lucide-philippine-peso",
         color: "green",
     },
     {
-        title: "Expenses",
-        value: "₱1.2M",
-        subtitle: "-5% from yesterday",
-        icon: "i-lucide-trending-down",
+        title: "Active Businesses",
+        value: "5,860",
+        subtitle: "registered",
+        icon: "i-lucide-building-2",
         color: "red",
     },
     {
-        title: "Users",
-        value: "1,248",
-        subtitle: "+8% from yesterday",
-        icon: "i-lucide-users",
+        title: "New Registrations",
+        value: "198",
+        subtitle: "this month",
+        icon: "i-lucide-file-check",
         color: "blue",
     },
     {
-        title: "Orders",
-        value: "356",
-        subtitle: "+12% from yesterday",
-        icon: "i-lucide-shopping-cart",
+        title: "Pending Approvals",
+        value: "47",
+        subtitle: "awaiting action",
+        icon: "i-lucide-clock",
         color: "purple",
     },
     {
-        title: "New Signups",
-        value: "89",
-        subtitle: "+3% from yesterday",
-        icon: "i-lucide-user-plus",
+        title: "Expiring Permits",
+        value: "23",
+        subtitle: "within 30 days",
+        icon: "i-lucide-triangle-alert",
         color: "indigo",
     },
     {
-        title: "Refunds",
-        value: "₱75K",
-        subtitle: "-2% from yesterday",
-        icon: "i-lucide-rotate-ccw",
+        title: "Avg Processing",
+        value: "3.2 days",
+        subtitle: "target: 5 days",
+        icon: "i-lucide-timer",
         color: "orange",
     },
 ] as const;

@@ -13,14 +13,14 @@
                     <UserMenu />
                 </template>
             </UDashboardNavbar>
-            <UDashboardToolbar>
+            <!-- <UDashboardToolbar>
                 <template #left>
                     Hello World
                 </template>
                 <template #right>
                     <UTabs :items="items" size="sm" class="w-full" />
                 </template>
-            </UDashboardToolbar>
+            </UDashboardToolbar> -->
         </template>
         <template #body>
             smart workflow
