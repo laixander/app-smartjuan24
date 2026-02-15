@@ -23,7 +23,7 @@
             </UDashboardToolbar> -->
         </template>
         <template #body>
-            smart workflow
+            <KanbanBoard />
         </template>
     </UDashboardPanel>
 </template>
