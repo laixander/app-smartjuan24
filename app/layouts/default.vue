@@ -12,7 +12,7 @@
             </template>
             <template #default="{ collapsed }">
                 <UNavigationMenu
-                    :ui="{ root: 'gap-2.5', label: 'uppercase tracking-widest py-2.5', link: 'p-2.5', list: 'space-y-0.5' }"
+                    :ui="{ root: 'gap-2.5', label: 'text-default uppercase tracking-widest py-2.5', link: 'p-2.5', list: 'space-y-0.5' }"
                     :collapsed="collapsed" :items="items[0]" orientation="vertical" tooltip popover />
                 <!-- <UNavigationMenu :ui="{ root: 'gap-2.5', link: 'p-2.5', list: 'space-y-0.5' }" :collapsed="collapsed" :items="items[1]" orientation="vertical" tooltip class="mt-auto" /> -->
             </template>

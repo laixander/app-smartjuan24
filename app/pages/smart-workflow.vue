@@ -1,7 +1,7 @@
 <template>
     <UDashboardPanel>
         <template #header>
-            <UDashboardNavbar title="Smart Workflow">
+            <UDashboardNavbar title="Smart Workflow" :ui="{ title: 'text-default' }">
                 <template #leading>
                     <UDashboardSidebarCollapse />
                 </template>

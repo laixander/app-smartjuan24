@@ -58,7 +58,7 @@ function getTasksByColumn(column: ColumnKey) {
             @drop="onDrop(column.key)">
             <template #header>
                 <div class="flex justify-between items-center">
-                    <h3 class="font-bold text-lg">
+                    <h3 class="font-bold text-sm uppercase tracking-widest">
                         {{ column.label }}
                     </h3>
                     <UBadge color="neutral" variant="soft">

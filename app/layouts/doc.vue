@@ -1,6 +1,7 @@
 <template>
     <UDashboardGroup>
-        <UDashboardSidebar resizable collapsible class="bg-elevated/25" :ui="{ root: 'w-auto', header: 'border-b border-default' }">
+        <UDashboardSidebar resizable collapsible class="bg-elevated/25"
+            :ui="{ root: 'w-auto', header: 'border-b border-default' }">
             <template #header="{ collapsed }">
                 <div v-if="!collapsed" class="px-2.5">
                     <AppLogo class="h-5 w-auto shrink-0" />
@@ -10,8 +11,9 @@
                 </div>
             </template>
             <template #default="{ collapsed }">
-                <UNavigationMenu :ui="{ root: 'gap-2.5', label: 'uppercase tracking-widest py-2.5', link: 'p-2.5', list: 'space-y-0.5' }" :collapsed="collapsed" :items="items[0]" orientation="vertical" tooltip
-          popover />
+                <UNavigationMenu
+                    :ui="{ root: 'gap-2.5', label: 'text-default uppercase tracking-widest py-2.5', link: 'p-2.5', list: 'space-y-0.5' }"
+                    :collapsed="collapsed" :items="items[0]" orientation="vertical" tooltip popover />
             </template>
         </UDashboardSidebar>
         <slot />
@@ -26,12 +28,12 @@ const items: NavigationMenuItem[][] = [
             label: 'Platform Overview',
             icon: 'i-lucide-book-open',
             to: '/documentation/platform-overview'
-        }, 
+        },
         {
             label: 'System Architecture',
             icon: 'i-lucide-server',
             to: '/documentation/system-architecture'
-        }, 
+        },
         {
             label: 'Module Reference',
             icon: 'i-lucide-layers',

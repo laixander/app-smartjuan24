@@ -1,7 +1,7 @@
 <template>
     <UDashboardPanel>
         <template #header>
-            <UDashboardNavbar title="Executive Dashboard">
+            <UDashboardNavbar title="Executive Dashboard" :ui="{ title: 'text-default' }">
                 <template #leading>
                     <UDashboardSidebarCollapse />
                 </template>
