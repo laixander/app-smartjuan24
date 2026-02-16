@@ -1,5 +1,5 @@
 <template>
-    <UDashboardPanel>
+    <UDashboardPanel :ui="{ body: 'overflow-hidden' }">
         <template #header>
             <UDashboardNavbar title="Smart Workflow" :ui="{ title: 'text-default' }">
                 <template #leading>
@@ -15,14 +15,19 @@
             </UDashboardNavbar>
         </template>
         <template #body>
-            <div class="mb-4">
-                <h2 class="text-xl font-bold text-toned">
-                    Task Management
-                </h2>
-                <p class="text-sm text-dimmed">
-                    Manage your business permits and licenses
-                </p>
-            </div>
+            <header class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-toned">
+                        Task Management
+                    </h2>
+                    <p class="text-sm text-dimmed">
+                        Manage your business permits and licenses
+                    </p>
+                </div>
+                <div>
+                    <UInput placeholder="Search..." size="lg" icon="i-lucide-search" />
+                </div>
+            </header>
             <div>
                 <KanbanBoard />
             </div>

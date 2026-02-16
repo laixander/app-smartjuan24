@@ -16,6 +16,7 @@ interface Task {
     aging: number
     permit: string
     submitted: string
+    industry: string
 }
 
 const columns: { key: ColumnKey; label: string }[] = [
@@ -33,17 +34,17 @@ const statusLabels: Record<ColumnKey, string> = {
 }
 
 const tasks = ref<Task[]>([
-    { id: 1, title: 'Sari-Sari Store ni Aling Nena', type: 'renewal', status: 'assessment', aging: 2, permit: 'Business Permit', submitted: '02/16/2026' },
-    { id: 2, title: 'Jollibee Branch #123', type: 'new', status: 'assessment', aging: 6, permit: 'Building Permit', submitted: '02/15/2026' },
-    { id: 3, title: 'SM Savemore Market', type: 'renewal', status: 'processing', aging: 12, permit: 'Mayor\'s Permit', submitted: '02/10/2026' },
-    { id: 4, title: 'Mercury Drug Corporation', type: 'new', status: 'approval', aging: 4, permit: 'Business Permit', submitted: '02/14/2026' },
-    { id: 5, title: 'Petron Gas Station', type: 'renewal', status: 'done', aging: 8, permit: 'Sanitary Permit', submitted: '02/12/2026' },
-    { id: 6, title: '7-Eleven Convenience Store', type: 'new', status: 'done', aging: 15, permit: 'Business Permit', submitted: '02/01/2026' }
+    { id: 1, title: 'Sari-Sari Store ni Aling Nena', type: 'renewal', status: 'assessment', aging: 2, permit: 'Business Permit', submitted: '02/16/2026', industry: 'Retail' },
+    { id: 2, title: 'Jollibee Branch #123', type: 'new', status: 'assessment', aging: 6, permit: 'Building Permit', submitted: '02/15/2026', industry: 'Food & Beverage' },
+    { id: 3, title: 'SM Savemore Market', type: 'renewal', status: 'processing', aging: 12, permit: 'Mayor\'s Permit', submitted: '02/10/2026', industry: 'Retail' },
+    { id: 4, title: 'Mercury Drug Corporation', type: 'new', status: 'approval', aging: 4, permit: 'Business Permit', submitted: '02/14/2026', industry: 'Pharmacy' },
+    { id: 5, title: 'Petron Gas Station', type: 'renewal', status: 'done', aging: 8, permit: 'Sanitary Permit', submitted: '02/12/2026', industry: 'Energy' },
+    { id: 6, title: '7-Eleven Convenience Store', type: 'new', status: 'done', aging: 15, permit: 'Business Permit', submitted: '02/01/2026', industry: 'Retail' }
 ])
 
 function getAgingConfig(days: number) {
     if (days < 5) return { color: 'primary' as const, icon: 'i-lucide-calendar', class: 'text-primary-500' }
-    if (days < 10) return { color: 'orange' as const, icon: 'i-lucide-circle-alert', class: 'text-orange-500' }
+    if (days < 10) return { color: 'yellow' as const, icon: 'i-lucide-circle-alert', class: 'text-yellow-500' }
     return { color: 'red' as const, icon: 'i-lucide-circle-alert', class: 'text-red-500' }
 }
 
@@ -58,7 +59,17 @@ function onDragStart(task: Task) {
     draggingTask.value = task
 }
 
+const hoveredColumn = ref<ColumnKey | null>(null)
+
+function onDragLeave(event: DragEvent) {
+    const relatedTarget = event.relatedTarget as Node
+    const currentTarget = event.currentTarget as Node
+    if (currentTarget && relatedTarget && currentTarget.contains(relatedTarget)) return
+    hoveredColumn.value = null
+}
+
 function onDrop(column: ColumnKey) {
+    hoveredColumn.value = null
     if (draggingTask.value) {
         draggingTask.value.status = column
         draggingTask.value = null
@@ -68,13 +79,36 @@ function onDrop(column: ColumnKey) {
 function getTasksByColumn(column: ColumnKey) {
     return tasks.value.filter(t => t.status === column)
 }
+
+const columnScrollStates = ref<Record<ColumnKey, boolean>>({
+    assessment: false,
+    processing: false,
+    approval: false,
+    done: false
+})
+
+function onColumnScroll(e: Event, key: ColumnKey) {
+    const target = e.target as HTMLElement
+    columnScrollStates.value[key] = target.scrollTop > 0
+}
+
+const isModalOpen = ref(false)
+const selectedTask = ref<Task | null>(null)
+
+function openTaskDetails(task: Task) {
+    selectedTask.value = task
+    isModalOpen.value = true
+}
 </script>
 
 <template>
-    <div class="flex overflow-x-auto p-[1px] pb-4 gap-6">
-        <div v-for="column in columns" :key="column.key" @dragover.prevent @drop="onDrop(column.key)"
-            class="min-w-[320px] min-h-[500px] flex flex-col gap-2">
-            <div class="flex justify-between items-center px-3 pb-2">
+    <div class="flex overflow-x-auto h-[calc(100vh-190px)] pb-2 gap-4">
+        <div v-for="column in columns" :key="column.key" @dragover.prevent="hoveredColumn = column.key"
+            @dragleave="onDragLeave" @drop="onDrop(column.key)" @scroll="onColumnScroll($event, column.key)"
+            class="min-w-[320px] min-h-0 overflow-y-auto flex flex-col gap-2 rounded-lg transition-colors duration-200"
+            :class="{ 'bg-neutral-100/50 dark:bg-neutral-800/100': hoveredColumn === column.key }">
+            <div class="flex justify-between items-center p-3 sticky top-0 z-10"
+                :class="{ 'bg-default shadow-md': columnScrollStates[column.key] }">
                 <h3 class="font-bold text-sm uppercase tracking-widest">
                     {{ column.label }}
                 </h3>
@@ -82,10 +116,11 @@ function getTasksByColumn(column: ColumnKey) {
                     {{ getTasksByColumn(column.key).length }}
                 </UBadge>
             </div>
-            <div class="space-y-3 flex-1">
+            <div class="space-y-3 flex-1 px-2 p-[1px]">
                 <div v-for="task in getTasksByColumn(column.key)" :key="task.id" draggable="true"
-                    @dragstart="onDragStart(task)" class="cursor-move">
-                    <UCard class="hover:shadow-lg transition" :ui="{ body: 'sm:p-4 space-y-2 dark:bg-neutral-800/50' }">
+                    @dragstart="onDragStart(task)" @dragend="hoveredColumn = null" class="cursor-move">
+                    <UCard @click="openTaskDetails(task)" class="hover:shadow-lg transition"
+                        :ui="{ body: 'sm:p-4 space-y-2 dark:bg-neutral-800/50' }">
                         <div class="flex justify-between items-center">
                             <UBadge v-bind="badgeConfig[task.type]" size="sm" :ui="{ label: 'uppercase font-bold' }" />
                             <span class="text-xs text-dimmed">#0000{{ task.id }}</span>
@@ -134,4 +169,42 @@ function getTasksByColumn(column: ColumnKey) {
             </div>
         </div>
     </div>
+
+
+    <!-- Modal Task Details -->
+    <UModal fullscreen v-model:open="isModalOpen" :close="false" :ui="{ header: 'justify-between' }">
+        <template #title>
+            <div class="flex items-center gap-2">
+                <UIcon name="i-lucide-building-2" class="size-5" />
+                {{ selectedTask?.title }}
+                <UBadge v-if="selectedTask" v-bind="badgeConfig[selectedTask.type]" size="sm"
+                    :ui="{ label: 'uppercase font-bold' }" />
+            </div>
+        </template>
+        <template #description>
+            <div class="flex items-center divide-x divide-default *:px-2 -mx-2">
+                <span class="text-xs text-dimmed">#0000{{ selectedTask?.id }}</span>
+                <span class="text-xs text-dimmed flex items-center gap-1">
+                    <UIcon name="i-lucide-briefcase" />{{ selectedTask?.industry }}
+                </span>
+                <span v-if="selectedTask" :class="getAgingConfig(selectedTask?.aging).class"
+                    class="text-xs flex items-center gap-1">
+                    <UIcon :name="getAgingConfig(selectedTask?.aging).icon" />
+                    {{ selectedTask?.aging }} Days {{ statusLabels[selectedTask?.status] }}
+                </span>
+            </div>
+        </template>
+        <template #actions>
+            <div class="flex items-center gap-2">
+                <UButton color="blue" variant="soft" icon="i-lucide-download" label="Export to PDF" />
+                <UButton color="amber" variant="soft" icon="i-lucide-undo-2" label="Return" />
+                <UButton color="red" variant="soft" icon="i-lucide-circle-x" label="Reject" />
+                <UButton color="green" icon="i-lucide-circle-check" label="Approve" />
+                <UButton color="neutral" variant="soft" icon="i-lucide-x" @click="isModalOpen = false" />
+            </div>
+        </template>
+        <template #body>
+            <Placeholder class="h-full" />
+        </template>
+    </UModal>
 </template>
