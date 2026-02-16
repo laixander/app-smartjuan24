@@ -13,31 +13,21 @@
                     <UserMenu />
                 </template>
             </UDashboardNavbar>
-            <!-- <UDashboardToolbar>
-                <template #left>
-                    Hello World
-                </template>
-                <template #right>
-                    <UTabs :items="items" size="sm" class="w-full" />
-                </template>
-            </UDashboardToolbar> -->
         </template>
         <template #body>
-            <KanbanBoard />
+            <div class="mb-4">
+                <h2 class="text-xl font-bold text-toned">
+                    Task Management
+                </h2>
+                <p class="text-sm text-dimmed">
+                    Manage your business permits and licenses
+                </p>
+            </div>
+            <div>
+                <KanbanBoard />
+            </div>
         </template>
     </UDashboardPanel>
 </template>
 <script setup lang="ts">
-const items = [
-    {
-        // label: 'Dashboard',
-        icon: 'i-lucide-kanban',
-        to: '/'
-    },
-    {
-        // label: 'Smart Workflow',
-        icon: 'i-lucide-list',
-        to: '/'
-    }
-]
 </script>
