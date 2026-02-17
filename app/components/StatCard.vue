@@ -1,5 +1,5 @@
 <template>
-    <UCard>
+    <UCard class="bg-elevated/50">
         <div class="space-y-3">
             <header>
                 <UBadge :icon="icon" :color="color" size="lg" variant="soft" :ui="{ base: 'p-2.5 rounded-lg mb-2' }" />

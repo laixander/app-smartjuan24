@@ -110,7 +110,7 @@ const steps = [
 </script>
 
 <template>
-    <div class="flex overflow-x-auto h-[calc(100vh-190px)] pb-2 gap-4">
+    <div class="flex overflow-x-auto h-[calc(100vh-140px)] pb-2 gap-4">
         <div v-for="column in columns" :key="column.key" @dragover.prevent="hoveredColumn = column.key"
             @dragleave="onDragLeave" @drop="onDrop(column.key)" @scroll="onColumnScroll($event, column.key)"
             class="min-w-[320px] min-h-0 overflow-y-auto flex flex-col gap-2 rounded-lg transition-colors duration-200"
