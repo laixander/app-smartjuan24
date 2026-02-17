@@ -99,6 +99,14 @@ function openTaskDetails(task: Task) {
     selectedTask.value = task
     isModalOpen.value = true
 }
+
+const steps = [
+    { title: 'Submission', description: 'Feb 5, 2026', color: 'amber' },
+    { title: 'Assessment', description: 'Validated', color: 'green' },
+    { title: 'Department Reviews', description: '5/7 Cleared', color: 'teal' },
+    { title: 'Payment', description: 'Paid', color: 'cyan' },
+    { title: 'Mayor Approval', description: 'Waiting', color: 'violet' }
+] as const
 </script>
 
 <template>
@@ -132,8 +140,7 @@ function openTaskDetails(task: Task) {
                         <div v-if="task.description" class="text-sm text-gray-500">
                             {{ task.description }}
                         </div>
-                        <div
-                            class="bg-neutral-50 dark:bg-neutral-800 rounded-md px-3 divide-y divide-neutral-200 dark:divide-neutral-700">
+                        <div class="bg-neutral-50 dark:bg-neutral-900/60 rounded-md px-3 divide-y divide-default">
                             <div class="flex justify-between items-center py-3">
                                 <div class="flex items-center gap-2">
                                     <UIcon name="i-lucide-file-text" />
@@ -182,7 +189,7 @@ function openTaskDetails(task: Task) {
             </div>
         </template>
         <template #description>
-            <div class="flex items-center divide-x divide-default *:px-2 -mx-2">
+            <div class="flex items-center gap-3">
                 <span class="text-xs text-dimmed">#0000{{ selectedTask?.id }}</span>
                 <span class="text-xs text-dimmed flex items-center gap-1">
                     <UIcon name="i-lucide-briefcase" />{{ selectedTask?.industry }}
@@ -196,15 +203,24 @@ function openTaskDetails(task: Task) {
         </template>
         <template #actions>
             <div class="flex items-center gap-2">
-                <UButton color="blue" variant="soft" icon="i-lucide-download" label="Export to PDF" />
-                <UButton color="amber" variant="soft" icon="i-lucide-undo-2" label="Return" />
-                <UButton color="red" variant="soft" icon="i-lucide-circle-x" label="Reject" />
-                <UButton color="green" icon="i-lucide-circle-check" label="Approve" />
-                <UButton color="neutral" variant="soft" icon="i-lucide-x" @click="isModalOpen = false" />
+                <UButton color="neutral" variant="outline" icon="i-lucide-download" label="Export to PDF" size="sm" />
+                <UButton color="amber" variant="subtle" icon="i-lucide-undo-2" label="Return" size="sm" />
+                <UButton color="red" variant="subtle" icon="i-lucide-circle-x" label="Reject" size="sm" />
+                <UButton color="green" icon="i-lucide-circle-check" label="Approve" size="sm" />
+                <UButton color="neutral" variant="soft" icon="i-lucide-x" size="sm" @click="isModalOpen = false" />
             </div>
         </template>
         <template #body>
-            <Placeholder class="h-full" />
+            <UCard :ui="{ body: 'flex gap-4' }">
+                <template v-for="(step, index) in steps" :key="step.title">
+                    <UAlert :color="step.color" :title="step.title" :description="step.description"
+                        icon="i-lucide-circle-check-big"
+                        :ui="{ root: 'items-center', title: 'font-bold', description: 'mt-0 text-xs', icon: 'size-6' }" />
+                    <div v-if="index < steps.length - 1" class="flex items-center gap-2">
+                        <UIcon name="i-lucide-chevron-right" class="size-5 text-dimmed" />
+                    </div>
+                </template>
+            </UCard>
         </template>
     </UModal>
 </template>

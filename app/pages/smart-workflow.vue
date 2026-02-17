@@ -13,9 +13,14 @@
                     <UserMenu />
                 </template>
             </UDashboardNavbar>
+            <UDashboardToolbar>
+                <template #left>
+                    <UInput placeholder="Search..." icon="i-lucide-search" />
+                </template>
+            </UDashboardToolbar>
         </template>
         <template #body>
-            <header class="flex justify-between items-center">
+            <!-- <header class="flex justify-between items-center">
                 <div>
                     <h2 class="text-xl font-bold text-toned">
                         Task Management
@@ -27,7 +32,7 @@
                 <div>
                     <UInput placeholder="Search..." size="lg" icon="i-lucide-search" />
                 </div>
-            </header>
+            </header> -->
             <div>
                 <KanbanBoard />
             </div>
