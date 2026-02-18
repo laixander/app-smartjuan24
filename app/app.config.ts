@@ -30,5 +30,26 @@ export default defineAppConfig({
                 root: 'rounded-2xl overflow-hidden',
             },
         },
+        table: {
+            slots: {
+                th: 'text-default px-6',
+                td: 'px-6',
+            },
+        },
+        // button: {
+        //     slots: {
+        //         base: 'rounded-xl',
+        //     },
+        //     variants: {
+        //         size: {
+        //             xs: {
+        //                 base: 'px-3.5 py-2.5 gap-2',
+        //             }
+        //         }
+        //     },
+        //     defaultVariants: {
+        //         size: 'xs',
+        //     },
+        // },
     }
 })

@@ -13,11 +13,6 @@
                     <UserMenu />
                 </template>
             </UDashboardNavbar>
-            <UDashboardToolbar>
-                <template #left>
-                    <UInput placeholder="Search..." icon="i-lucide-search" />
-                </template>
-            </UDashboardToolbar>
         </template>
         <template #body>
             <!-- <header class="flex justify-between items-center">
