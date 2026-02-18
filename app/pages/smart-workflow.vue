@@ -28,9 +28,10 @@
                     <UInput placeholder="Search..." size="lg" icon="i-lucide-search" />
                 </div>
             </header> -->
-            <div>
+            <!-- <div>
                 <KanbanBoard />
-            </div>
+            </div> -->
+            <Kanban />
         </template>
     </UDashboardPanel>
 </template>
