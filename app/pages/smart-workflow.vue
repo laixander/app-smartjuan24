@@ -1,5 +1,5 @@
 <template>
-    <UDashboardPanel :ui="{ body: 'overflow-hidden' }">
+    <UDashboardPanel>
         <template #header>
             <UDashboardNavbar title="Smart Workflow" :ui="{ title: 'text-default' }">
                 <template #leading>
@@ -13,27 +13,27 @@
                     <UserMenu />
                 </template>
             </UDashboardNavbar>
+            <UDashboardToolbar>
+                <!-- workflow page toolbar -->
+                <div class="flex items-center gap-4" v-if="$route.path === '/smart-workflow'">
+                    <UInput placeholder="Search..." icon="i-lucide-search" variant="soft" class="w-80" />
+                    <USelect
+                        :default-value="'All'"
+                        :items="['All', 'New', 'Renewal']"
+                        variant="ghost"
+                        class="data-[state=open]:bg-elevated w-28"
+                        :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }" 
+                    />
+                </div>
+                
+                <!-- details page toolbar -->
+                <div v-if="$route.path.startsWith('/smart-workflow/')">
+                    <UButton icon="i-lucide-arrow-left" label="Back to Board" variant="ghost" to="/smart-workflow" />
+                </div>
+            </UDashboardToolbar>
         </template>
         <template #body>
-            <!-- <header class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-bold text-toned">
-                        Task Management
-                    </h2>
-                    <p class="text-sm text-dimmed">
-                        Manage your business permits and licenses
-                    </p>
-                </div>
-                <div>
-                    <UInput placeholder="Search..." size="lg" icon="i-lucide-search" />
-                </div>
-            </header> -->
-            <!-- <div>
-                <KanbanBoard />
-            </div> -->
-            <Kanban />
+            <NuxtPage />
         </template>
     </UDashboardPanel>
 </template>
-<script setup lang="ts">
-</script>
