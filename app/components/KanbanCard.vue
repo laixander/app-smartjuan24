@@ -18,7 +18,8 @@ const { badgeConfig, statusLabels, getAgingConfig } = useTaskConfig()
     <UCard draggable="true" class="hover:shadow-lg transition cursor-move" @dragstart="emit('dragstart', task)"
         @click="emit('open', task)" :ui="{ body: 'sm:p-4 space-y-2 dark:bg-neutral-800/50' }">
         <div class="flex justify-between">
-            <UBadge :label="badgeConfig[task.type].label" :color="badgeConfig[task.type].color" size="sm" :ui="{ label: 'uppercase font-bold' }" />
+            <UBadge :label="badgeConfig[task.type].label" :color="badgeConfig[task.type].color" size="sm"
+                :ui="{ label: 'uppercase font-bold' }" />
             <span class="text-xs text-dimmed">#0000{{ task.id }}</span>
         </div>
 
@@ -53,8 +54,7 @@ const { badgeConfig, statusLabels, getAgingConfig } = useTaskConfig()
                 <UChip standalone inset :color="getAgingConfig(task.aging).color" />
                 {{ statusLabels[task.status] }}
             </span>
-            <span :class="getAgingConfig(task.aging).class"
-                class="text-xs font-semibold flex items-center gap-1">
+            <span :class="getAgingConfig(task.aging).class" class="text-xs font-semibold flex items-center gap-1">
                 <UIcon :name="getAgingConfig(task.aging).icon" />
                 {{ task.aging }} Days
             </span>

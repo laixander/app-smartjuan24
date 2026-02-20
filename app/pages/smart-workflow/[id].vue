@@ -88,34 +88,41 @@ const openSlideover = () => {
             <div class="space-y-1">
                 <div class="flex items-center gap-2">
                     <UIcon name="i-lucide-building-2" class="size-5" />
-                    <h3 class="text-lg font-bold">
+                    <h3 class="text-xl font-bold">
                         {{ task.title }}
                     </h3>
-                    <UBadge v-if="task" v-bind="badgeConfig[task.type]" size="sm" :ui="{ label: 'uppercase font-bold' }" />
+                    <UBadge v-if="task" v-bind="badgeConfig[task.type]" size="sm"
+                        :ui="{ label: 'uppercase font-bold' }" />
                 </div>
                 <div class="text-xs text-dimmed">
-                    #0000{{ task.id }} • {{ task.industry }} • <span :class="getAgingConfig(task.aging).class">{{ task.aging }} Days {{ statusLabels[task.status] }}</span>
+                    #0000{{ task.id }} • {{ task.industry }} • <span :class="getAgingConfig(task.aging).class">{{
+                        task.aging }} Days {{ statusLabels[task.status] }}</span>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
-                <UButton color="neutral" variant="outline" icon="i-lucide-history" label="Activity Timeline" @click="openSlideover" />
-                <UButton color="neutral" variant="outline" icon="i-lucide-download" label="Export to PDF" />
+                <UButton color="neutral" icon="i-lucide-list-check" variant="subtle" label="Activity Timeline"
+                    @click="openSlideover" />
+                <UButton color="neutral" icon="i-lucide-file-input" variant="subtle" label="Export to PDF" />
                 <USeparator orientation="vertical" class="h-6 px-2" />
-                <UButton color="amber" variant="outline" icon="i-lucide-undo-2" label="Return" />
-                <UButton color="red" variant="outline" icon="i-lucide-circle-x" label="Reject" />
-                <UButton icon="i-lucide-circle-check" label="Approve" />
+                <UButton color="amber" icon="i-lucide-rotate-ccw" label="Return" />
+                <UButton color="red" icon="i-lucide-circle-x" label="Reject" />
+                <UButton color="green" icon="i-lucide-circle-check" label="Approve" />
             </div>
         </div>
 
         <USeparator />
         <div class="flex gap-4">
             <template v-for="(step, index) in WORKFLOW_STEPS" :key="step.title">
-                <UAlert :class="STEP_CONFIG[step.status].opacity" :color="STEP_CONFIG[step.status].color" variant="soft" :title="step.title" :description="step.description"
+                <UAlert :class="STEP_CONFIG[step.status].opacity" :color="STEP_CONFIG[step.status].color" variant="soft"
+                    :title="step.title" :description="step.description"
                     :ui="{ root: 'items-center', title: 'font-bold', description: 'mt-0 text-xs', icon: 'size-6' }">
                     <template #leading>
-                        <UBadge v-if="step.status === 'done'" icon="i-lucide-circle-check-big" :color="STEP_CONFIG[step.status].color" class="rounded-full" :ui="{ leadingIcon: 'size-4', base: 'p-2' }" />
-                        <UBadge v-else :color="STEP_CONFIG[step.status].color" class="rounded-full" :ui="{ base: 'p-0' }">
+                        <UBadge v-if="step.status === 'done'" icon="i-lucide-circle-check-big"
+                            :color="STEP_CONFIG[step.status].color" class="rounded-full"
+                            :ui="{ leadingIcon: 'size-4', base: 'p-2' }" />
+                        <UBadge v-else :color="STEP_CONFIG[step.status].color" class="rounded-full"
+                            :ui="{ base: 'p-0' }">
                             <div class="flex items-center justify-center w-8 h-8">{{ index + 1 }}</div>
                         </UBadge>
                     </template>
@@ -127,15 +134,19 @@ const openSlideover = () => {
         </div>
         <USeparator />
 
-        <UTabs :items="WORKFLOW_TABS" :ui="{ root: 'gap-4', trailingBadge: 'rounded-full' }" class="w-full mb-4">
+        <UTabs variant="link" :items="WORKFLOW_TABS" :ui="{ root: 'gap-4', trailingBadge: 'rounded-full' }"
+            class="w-full">
             <template #dept-clearances>
                 <UCard :ui="{ body: 'p-0 sm:p-0' }">
                     <template #header>
                         <div class="flex items-center gap-2">
                             <h3 class="font-bold">Department Reviews</h3>
-                            <UBadge icon="i-lucide-circle-check-big" label="5" color="green" variant="soft" size="sm" class="rounded-full" />
-                            <UBadge icon="i-lucide-clock" label="1" color="yellow" variant="soft" size="sm" class="rounded-full" />
-                            <UBadge icon="i-lucide-circle-alert" label="1" color="red" variant="soft" size="sm" class="rounded-full" />
+                            <UBadge icon="i-lucide-circle-check-big" label="5" color="green" variant="soft" size="sm"
+                                class="rounded-full" />
+                            <UBadge icon="i-lucide-clock" label="1" color="yellow" variant="soft" size="sm"
+                                class="rounded-full" />
+                            <UBadge icon="i-lucide-circle-alert" label="1" color="red" variant="soft" size="sm"
+                                class="rounded-full" />
                         </div>
                     </template>
                     <UTable v-if="reviews" :data="reviews" :columns="columns" />
