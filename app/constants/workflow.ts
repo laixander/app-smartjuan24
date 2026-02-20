@@ -44,6 +44,8 @@ export const TIMELINE_DATA: TimelineEntry[] = [
     {
         icon: 'i-lucide-file-text',
         color: 'blue',
+        status: 'info',
+        statusConfig: { icon: 'i-lucide-upload-cloud', color: 'text-blue-400' },
         title: 'Application Submitted',
         actor: 'Ricardo Villanueva',
         date: 'Feb 5, 2026 8:30 AM',
@@ -52,6 +54,7 @@ export const TIMELINE_DATA: TimelineEntry[] = [
     {
         icon: 'i-lucide-shield',
         color: 'purple',
+        status: 'completed',
         title: 'Documents Validated',
         actor: 'Maria Santos (BPLO)',
         date: 'Feb 6, 2026 10:15 AM',
@@ -60,6 +63,7 @@ export const TIMELINE_DATA: TimelineEntry[] = [
     {
         icon: 'i-lucide-credit-card',
         color: 'yellow',
+        status: 'completed',
         title: 'Payment Received',
         actor: "City Treasurer's Office",
         date: 'Feb 7, 2026 11:40 AM',
@@ -68,6 +72,7 @@ export const TIMELINE_DATA: TimelineEntry[] = [
     {
         icon: 'i-lucide-circle-check',
         color: 'green',
+        status: 'completed',
         title: 'Approved by BPLO',
         actor: 'Maria Santos',
         date: 'Feb 7, 2026 9:15 AM',
@@ -76,6 +81,7 @@ export const TIMELINE_DATA: TimelineEntry[] = [
     {
         icon: 'i-lucide-circle-alert',
         color: 'red',
+        status: 'rejected',
         title: 'Issue by Environmental',
         actor: 'Ana Villanueva',
         date: 'Feb 8, 2026 1:15 PM',
@@ -84,6 +90,7 @@ export const TIMELINE_DATA: TimelineEntry[] = [
     {
         icon: 'i-lucide-circle',
         color: 'neutral',
+        status: 'pending',
         title: 'Forwarded to Mayor',
         actor: 'System',
         date: 'Feb 9, 2026 8:00 AM',

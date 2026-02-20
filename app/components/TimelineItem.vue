@@ -1,11 +1,18 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useStatusConfig } from '~/composables/useStatusConfig'
 import type { TimelineEntry } from '~/types/timeline'
 
 interface Props extends TimelineEntry {
     isLast?: boolean
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const { getStatusConfig } = useStatusConfig()
+
+const statusConfig = computed(() => {
+    return props.statusConfig || getStatusConfig(props.status)
+})
 </script>
 
 <template>
@@ -35,8 +42,10 @@ defineProps<Props>()
                 {{ date }}
             </div>
 
-            <p v-if="description" class="text-xs text-dimmed bg-elevated/50 rounded-md px-2 py-1">
-                {{ description }}
+            <p v-if="description"
+                class="flex items-center gap-2 text-xs text-dimmed bg-elevated/50 rounded-md px-2 py-1">
+                <!-- Icon configuration by status -->
+                <UIcon :name="statusConfig.icon" :class="statusConfig.color" />{{ description }}
             </p>
         </div>
     </div>

@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import type { Task, DeptReview } from '~/types/model'
-import { WORKFLOW_TABS, STEP_CONFIG, WORKFLOW_STEPS, TIMELINE_DATA } from '~/constants/workflow'
+import { WORKFLOW_TABS, STEP_CONFIG, WORKFLOW_STEPS } from '~/constants/workflow'
+import { useTimeline } from '~/composables/useTimeline'
 import { useTaskConfig } from '~/composables/useTaskConfig'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const route = useRoute()
 const taskId = route.params.id as string
 
 const { data: task } = await useFetch<Task>(`/api/task/${taskId}`)
-const { data: reviews } = await useFetch<DeptReview[]>('/api/business')
 
 const { badgeConfig, statusLabels, getAgingConfig } = useTaskConfig()
 
@@ -76,10 +76,62 @@ const columns: TableColumn<DeptReview>[] = [
 ]
 
 
-const open = ref(false)
-const openSlideover = () => {
-    open.value = true
-}
+const { isOpen } = useWorkflowSlideover()
+
+const reviewStats = computed(() => {
+    const stats = {
+        cleared: 0,
+        pending: 0,
+        'with issue': 0
+    }
+
+    task.value?.reviews?.forEach(review => {
+        if (review.status in stats) {
+            stats[review.status as keyof typeof stats]++
+        }
+    })
+
+    return stats
+})
+
+const dynamicTabs = computed(() => {
+    return WORKFLOW_TABS.map(tab => {
+        if (tab.slot === 'dept-clearances') {
+            const total = task.value?.reviews?.length || 0
+            const cleared = reviewStats.value.cleared
+            return {
+                ...tab,
+                badge: {
+                    ...tab.badge,
+                    label: `${cleared}/${total}`,
+                    color: (cleared === total ? 'green' : 'yellow') as any
+                }
+            }
+        }
+        return tab
+    })
+})
+
+const dynamicSteps = computed(() => {
+    return WORKFLOW_STEPS.map(step => {
+        if (step.title === 'Department Reviews') {
+            const total = task.value?.reviews?.length || 0
+            const cleared = reviewStats.value.cleared
+            return {
+                ...step,
+                description: `${cleared}/${total} Cleared`,
+                status: cleared === total ? 'done' : 'pending'
+            }
+        }
+        return step
+    })
+})
+
+const { generateTimeline } = useTimeline()
+const dynamicTimeline = computed(() => {
+    if (!task.value) return []
+    return generateTimeline(task.value)
+})
 </script>
 
 <template>
@@ -94,17 +146,35 @@ const openSlideover = () => {
                     <UBadge v-if="task" v-bind="badgeConfig[task.type]" size="sm"
                         :ui="{ label: 'uppercase font-bold' }" />
                 </div>
-                <div class="text-xs text-dimmed">
+
+                <!-- <div class="text-xs text-dimmed">
                     #0000{{ task.id }} • {{ task.industry }} • <span :class="getAgingConfig(task.aging).class">{{
                         task.aging }} Days {{ statusLabels[task.status] }}</span>
+                </div> -->
+
+                <div class="flex items-center gap-4 flex-wrap text-xs text-dimmed">
+                    <span class="inline-flex items-center gap-1.5">
+                        <UIcon name="i-lucide-tag" />{{ task.permit }}
+                    </span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <UIcon name="i-lucide-hash" />BP-2026-000{{ task.id }}
+                    </span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <UIcon name="i-lucide-briefcase" />{{ task.industry }}
+                    </span>
+                    <span class="inline-flex items-center gap-1.5" :class="getAgingConfig(task.aging).class">
+                        <UIcon name="i-lucide-clock" />{{ task.aging }} Days {{ statusLabels[task.status] }}
+                    </span>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
-                <UButton color="neutral" icon="i-lucide-list-check" variant="subtle" label="Activity Timeline"
+                <!-- <UButton icon="i-lucide-list-todo" color="neutral" variant="subtle" @click="openSlideover" />
+                <UButton icon="i-lucide-download" color="neutral" variant="subtle" /> -->
+                <!-- <UButton color="neutral" icon="i-lucide-list-check" variant="subtle" label="Activity Timeline"
                     @click="openSlideover" />
                 <UButton color="neutral" icon="i-lucide-file-input" variant="subtle" label="Export to PDF" />
-                <USeparator orientation="vertical" class="h-6 px-2" />
+                <USeparator orientation="vertical" class="h-6 px-2" /> -->
                 <UButton color="amber" icon="i-lucide-rotate-ccw" label="Return" />
                 <UButton color="red" icon="i-lucide-circle-x" label="Reject" />
                 <UButton color="green" icon="i-lucide-circle-check" label="Approve" />
@@ -113,15 +183,16 @@ const openSlideover = () => {
 
         <USeparator />
         <div class="flex gap-4">
-            <template v-for="(step, index) in WORKFLOW_STEPS" :key="step.title">
-                <UAlert :class="STEP_CONFIG[step.status].opacity" :color="STEP_CONFIG[step.status].color" variant="soft"
-                    :title="step.title" :description="step.description"
+            <template v-for="(step, index) in dynamicSteps" :key="step.title">
+                <UAlert :class="(STEP_CONFIG as any)[step.status].opacity"
+                    :color="(STEP_CONFIG as any)[step.status].color" variant="soft" :title="step.title"
+                    :description="step.description"
                     :ui="{ root: 'items-center', title: 'font-bold', description: 'mt-0 text-xs', icon: 'size-6' }">
                     <template #leading>
                         <UBadge v-if="step.status === 'done'" icon="i-lucide-circle-check-big"
-                            :color="STEP_CONFIG[step.status].color" class="rounded-full"
+                            :color="(STEP_CONFIG as any)[step.status].color" class="rounded-full"
                             :ui="{ leadingIcon: 'size-4', base: 'p-2' }" />
-                        <UBadge v-else :color="STEP_CONFIG[step.status].color" class="rounded-full"
+                        <UBadge v-else :color="(STEP_CONFIG as any)[step.status].color" class="rounded-full"
                             :ui="{ base: 'p-0' }">
                             <div class="flex items-center justify-center w-8 h-8">{{ index + 1 }}</div>
                         </UBadge>
@@ -134,38 +205,137 @@ const openSlideover = () => {
         </div>
         <USeparator />
 
-        <UTabs variant="link" :items="WORKFLOW_TABS" :ui="{ root: 'gap-4', trailingBadge: 'rounded-full' }"
-            class="w-full">
+        <UTabs variant="link" :items="dynamicTabs"
+            :ui="{ root: 'gap-4', list: 'lg:gap-6', trailingBadge: 'rounded-full' }" class="w-full">
             <template #dept-clearances>
                 <UCard :ui="{ body: 'p-0 sm:p-0' }">
                     <template #header>
                         <div class="flex items-center gap-2">
                             <h3 class="font-bold">Department Reviews</h3>
-                            <UBadge icon="i-lucide-circle-check-big" label="5" color="green" variant="soft" size="sm"
+
+                            <!-- review stat -->
+                            <!-- cleared -->
+                            <UBadge v-if="reviewStats.cleared > 0" icon="i-lucide-circle-check-big"
+                                :label="reviewStats.cleared.toString()" color="green" variant="soft" size="sm"
                                 class="rounded-full" />
-                            <UBadge icon="i-lucide-clock" label="1" color="yellow" variant="soft" size="sm"
+                            <!-- pending -->
+                            <UBadge v-if="reviewStats.pending > 0" icon="i-lucide-clock"
+                                :label="reviewStats.pending.toString()" color="yellow" variant="soft" size="sm"
                                 class="rounded-full" />
-                            <UBadge icon="i-lucide-circle-alert" label="1" color="red" variant="soft" size="sm"
+                            <!-- with issue -->
+                            <UBadge v-if="reviewStats['with issue'] > 0" icon="i-lucide-circle-alert"
+                                :label="reviewStats['with issue'].toString()" color="red" variant="soft" size="sm"
                                 class="rounded-full" />
                         </div>
                     </template>
-                    <UTable v-if="reviews" :data="reviews" :columns="columns" />
+                    <UTable v-if="task?.reviews" :data="task.reviews" :columns="columns" />
                 </UCard>
             </template>
             <template #business-info>
-                <UCard :ui="{ body: 'p-0 sm:p-0' }">
+                <UCard>
                     <template #header>
                         <div class="flex items-center gap-2">
                             <h3 class="font-bold">Owner Information</h3>
                         </div>
                     </template>
+                    <div class="grid grid-cols-3 gap-5">
+                        <div class="col-span-2 grid grid-cols-2 gap-x-5 gap-y-3">
+                            <div class="">
+                                <div class="text-xs text-dimmed">Full Name</div>
+                                <div class="text-sm">Angela Santos</div>
+                            </div>
+                            <div class="">
+                                <div class="text-xs text-dimmed">Contact Number</div>
+                                <div class="text-sm">+63 917 812 3456</div>
+                            </div>
+                            <div class="">
+                                <div class="text-xs text-dimmed">Email Address</div>
+                                <div class="text-sm">angela@email.com</div>
+                            </div>
+                            <div class="">
+                                <div class="text-xs text-dimmed">Nationality</div>
+                                <div class="text-sm">Filipino</div>
+                            </div>
+                            <div class="col-span-2">
+                                <div class="text-xs text-dimmed">Address</div>
+                                <div class="text-sm">Unit 2401, One Ayala Tower, Makati Avenue cor. Edsa, Makati City
+                                    1227</div>
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-lg overflow-hidden border border-default h-[160px] bg-elevated flex items-center justify-center relative">
+                            <img src="https://images.unsplash.com/photo-1723002093542-807b783ccf07?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5pbGElMjBjaXR5JTIwbWFwJTIwc2F0ZWxsaXRlJTIwdmlld3xlbnwxfHx8fDE3NzA2MjAwODF8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080&amp;utm_source=figma&amp;utm_medium=referral"
+                                alt="Map" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div
+                                    class="bg-elevated/90 backdrop-blur-sm rounded-lg px-3 py-1.5 shadow-sm flex items-center gap-1.5">
+                                    <UIcon name="i-lucide-map-pin" class="size-5 text-primary" /><span
+                                        class="text-xs font-semibold">Makati City</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </UCard>
-                <UCard :ui="{ body: 'p-0 sm:p-0' }" class="mt-4">
+                <UCard class="mt-4">
                     <template #header>
                         <div class="flex items-center gap-2">
                             <h3 class="font-bold">Business Details</h3>
                         </div>
                     </template>
+                    <div class="grid grid-cols-3 gap-x-5 gap-y-3">
+                        <div class="">
+                            <div class="text-xs text-dimmed">Application Type
+                            </div>
+                            <div class="text-sm text-primary">Business Permit Renewal
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="text-xs text-dimmed">Business Name</div>
+                            <div class="text-sm">Metro Pharma Inc.</div>
+                        </div>
+                        <div class="">
+                            <div class="text-xs text-dimmed">Ownership Type</div>
+                            <div class="text-sm">Corporation</div>
+                        </div>
+                        <div class="">
+                            <div class="text-xs text-dimmed">DTI/SEC Number</div>
+                            <div class="text-sm">SEC-2024-001234567</div>
+                        </div>
+                        <div class="">
+                            <div class="text-xs text-dimmed">DTI/SEC Date</div>
+                            <div class="text-sm">March 15, 2024</div>
+                        </div>
+                        <div class="">
+                            <div class="text-xs text-dimmed">TIN</div>
+                            <div class="text-sm">123-456-789-000</div>
+                        </div>
+                        <div class="">
+                            <div class="text-xs text-dimmed">Business Area</div>
+                            <div class="text-sm">2,500 sqm</div>
+                        </div>
+                        <div class="">
+                            <div class="text-xs text-dimmed">No. of Employees
+                            </div>
+                            <div class="text-sm">245</div>
+                        </div>
+                        <div class="">
+                            <div class="text-xs text-dimmed">Ownership of Space
+                            </div>
+                            <div class="text-sm">Rented</div>
+                        </div>
+                        <div class="col-span-2">
+                            <div class="text-xs text-dimmed">Business Address
+                            </div>
+                            <div class="text-sm">123 Ayala Avenue, Makati
+                                City 1227
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="text-xs text-dimmed">Gov't Incentive
+                            </div>
+                            <div class="text-sm text-primary">Yes — BOI Registered</div>
+                        </div>
+                    </div>
                 </UCard>
                 <UCard :ui="{ body: 'p-0 sm:p-0' }" class="mt-4">
                     <template #header>
@@ -196,9 +366,9 @@ const openSlideover = () => {
         </UTabs>
     </div>
 
-    <USlideover v-model:open="open" :title="task?.title" description="Activity Timeline">
+    <USlideover v-model:open="isOpen" :title="task?.title" description="Activity Timeline">
         <template #body>
-            <Timeline :items="TIMELINE_DATA" />
+            <Timeline :items="dynamicTimeline" />
         </template>
     </USlideover>
 </template>

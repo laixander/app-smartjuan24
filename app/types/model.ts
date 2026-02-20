@@ -16,6 +16,7 @@ export interface Task {
     permit: string
     submitted: string
     industry: string
+    reviews?: DeptReview[]
 }
 
 export type DeptReviewStatus = 'cleared' | 'pending' | 'with issue'

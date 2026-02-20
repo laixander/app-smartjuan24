@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const { openSlideover } = useWorkflowSlideover()
+</script>
+
 <template>
     <UDashboardPanel>
         <template #header>
@@ -17,19 +21,21 @@
                 <!-- workflow page toolbar -->
                 <div class="flex items-center gap-4" v-if="$route.path === '/smart-workflow'">
                     <UInput placeholder="Search..." icon="i-lucide-search" variant="soft" class="w-80" />
-                    <USelect
-                        :default-value="'All'"
-                        :items="['All', 'New', 'Renewal']"
-                        variant="ghost"
+                    <USelect :default-value="'All'" :items="['All', 'New', 'Renewal']" variant="ghost"
                         class="data-[state=open]:bg-elevated w-28"
-                        :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }" 
-                    />
+                        :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }" />
                 </div>
-                
+
                 <!-- details page toolbar -->
-                <div v-if="$route.path.startsWith('/smart-workflow/')">
+                <template v-if="$route.path.startsWith('/smart-workflow/')" #left>
                     <UButton icon="i-lucide-arrow-left" label="Back to Board" variant="ghost" to="/smart-workflow" />
-                </div>
+                </template>
+                <template v-if="$route.path.startsWith('/smart-workflow/')" #right>
+                    <UFieldGroup>
+                        <UButton icon="i-lucide-list-todo" color="neutral" variant="subtle" @click="openSlideover" />
+                        <UButton icon="i-lucide-download" color="neutral" variant="subtle" />
+                    </UFieldGroup>
+                </template>
             </UDashboardToolbar>
         </template>
         <template #body>
