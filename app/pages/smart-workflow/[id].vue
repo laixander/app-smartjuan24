@@ -132,6 +132,71 @@ const dynamicTimeline = computed(() => {
     if (!task.value) return []
     return generateTimeline(task.value)
 })
+
+type businessActivity = {
+    lineOfBusiness: string
+    units: number
+    capitalization: number
+}
+
+
+const data = ref<businessActivity[]>([
+    {
+        lineOfBusiness: 'Hotel Operations',
+        units: 1,
+        capitalization: 180000000.00
+    },
+    {
+        lineOfBusiness: 'Restaurant / Food Service',
+        units: 3,
+        capitalization: 25000000.00
+    },
+    {
+        lineOfBusiness: 'Convention / Events Center',
+        units: 1,
+        capitalization: 45000000.00
+    },
+    {
+        lineOfBusiness: 'Spa & Wellness',
+        units: 1,
+        capitalization: 12000000.00
+    }
+])
+
+const businessActivityColumns: TableColumn<businessActivity>[] = [
+    {
+        accessorKey: 'lineOfBusiness',
+        header: 'Line of Business',
+        footer: 'Total'
+    },
+    {
+        accessorKey: 'units',
+        header: 'Units',
+        footer: ({ table }) => {
+            const total = table.getFilteredRowModel().rows.reduce((sum, row) => sum + Number.parseFloat(row.getValue('units')), 0)
+            return total
+        }
+    },
+    {
+        accessorKey: 'capitalization',
+        header: 'Capitalization',
+        footer: ({ table }) => {
+            const total = table.getFilteredRowModel().rows.reduce((sum, row) => sum + Number.parseFloat(row.getValue('capitalization')), 0)
+            const formatted = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PHP'
+            }).format(total)
+            return h('span', { class: 'text-primary' }, formatted)
+        },
+        cell: ({ row }) => {
+            const amount = Number.parseFloat(row.getValue('capitalization'))
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PHP'
+            }).format(amount)
+        }
+    }
+]
 </script>
 
 <template>
@@ -343,6 +408,7 @@ const dynamicTimeline = computed(() => {
                             <h3 class="font-bold">Business Activities</h3>
                         </div>
                     </template>
+                    <UTable :data="data" :columns="businessActivityColumns" class="flex-1" />
                 </UCard>
             </template>
             <template #documents>
