@@ -443,13 +443,13 @@ const handleConfirmDecision = () => {
                 <div class="grid grid-cols-3 gap-2 p-1 bg-neutral-100/50 dark:bg-neutral-800/100 rounded-lg">
                     <UButton :color="decisionType === 'approve' ? 'green' : 'neutral'"
                         :variant="decisionType === 'approve' ? 'soft' : 'ghost'" label="Approve"
-                        icon="i-lucide-circle-check" block class="h-10 font-bold" @click="decisionType = 'approve'" />
+                        icon="i-lucide-circle-check" block @click="decisionType = 'approve'" />
                     <UButton :color="decisionType === 'return' ? 'amber' : 'neutral'"
                         :variant="decisionType === 'return' ? 'soft' : 'ghost'" label="Return"
-                        icon="i-lucide-rotate-ccw" block class="h-10 font-bold" @click="decisionType = 'return'" />
+                        icon="i-lucide-rotate-ccw" block @click="decisionType = 'return'" />
                     <UButton :color="decisionType === 'reject' ? 'red' : 'neutral'"
                         :variant="decisionType === 'reject' ? 'soft' : 'ghost'" label="Reject" icon="i-lucide-circle-x"
-                        block class="h-10 font-bold" @click="decisionType = 'reject'" />
+                        block @click="decisionType = 'reject'" />
                 </div>
 
                 <div class="space-y-4">
