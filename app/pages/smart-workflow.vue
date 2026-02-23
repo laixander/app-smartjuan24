@@ -32,8 +32,8 @@ const { openSlideover } = useWorkflowSlideover()
                 </template>
                 <template v-if="$route.path.startsWith('/smart-workflow/')" #right>
                     <UFieldGroup>
-                        <UButton icon="i-lucide-list-todo" color="neutral" variant="subtle" @click="openSlideover" />
-                        <UButton icon="i-lucide-download" color="neutral" variant="subtle" />
+                        <UButton icon="i-lucide-layout-list" color="neutral" variant="soft" @click="openSlideover" />
+                        <UButton icon="i-lucide-download" color="neutral" variant="soft" />
                     </UFieldGroup>
                 </template>
             </UDashboardToolbar>

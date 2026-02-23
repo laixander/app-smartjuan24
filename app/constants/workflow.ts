@@ -4,9 +4,9 @@ import type { TimelineEntry } from '~/types/timeline'
 export const WORKFLOW_TABS: WorkflowTabItem[] = [
     {
         label: 'Department Clearances',
-        icon: 'i-lucide-building-2',
+        icon: 'i-lucide-shield-check',
         slot: 'dept-clearances',
-        badge: { label: '5/7', color: 'yellow', variant: 'solid' },
+        badge: { variant: 'solid' },
     },
     {
         label: 'Business Information',
@@ -17,12 +17,31 @@ export const WORKFLOW_TABS: WorkflowTabItem[] = [
         label: 'Documents',
         icon: 'i-lucide-file-text',
         slot: 'documents',
-        badge: { label: '6/8', color: 'yellow', variant: 'solid' }
+        badge: { variant: 'solid' }
     },
     {
         label: 'Fees & Payment',
         icon: 'i-lucide-wallet',
-        slot: 'fees-payment'
+        slot: 'fees-payment',
+        badge: { variant: 'solid' }
+    }
+]
+
+export const BUSINESS_INFO_TABS: WorkflowTabItem[] = [
+    {
+        label: 'Owner Information',
+        icon: 'i-lucide-user',
+        slot: 'owner-info'
+    },
+    {
+        label: 'Business Details',
+        icon: 'i-lucide-briefcase',
+        slot: 'business-details'
+    },
+    {
+        label: 'Business Activities',
+        icon: 'i-lucide-clipboard-check',
+        slot: 'business-activity'
     }
 ]
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
-import type { Task, DeptReview } from '~/types/model'
-import { WORKFLOW_TABS, STEP_CONFIG, WORKFLOW_STEPS } from '~/constants/workflow'
+import type { TableColumn, TabsItem } from '@nuxt/ui'
+import type { Task, DeptReview, FeeItem } from '~/types/model'
+import { WORKFLOW_TABS, STEP_CONFIG, WORKFLOW_STEPS, BUSINESS_INFO_TABS } from '~/constants/workflow'
 import { useTimeline } from '~/composables/useTimeline'
 import { useTaskConfig } from '~/composables/useTaskConfig'
 import { ref, computed } from 'vue'
@@ -75,6 +75,35 @@ const columns: TableColumn<DeptReview>[] = [
     }
 ]
 
+const feeColumns: TableColumn<FeeItem>[] = [
+    {
+        accessorKey: 'description',
+        header: 'Description',
+        footer: 'Total',
+        cell: ({ row }) => h('div', { class: 'font-medium' }, row.getValue('description') as string)
+    },
+    {
+        accessorKey: 'amount',
+        header: () => h('div', { class: 'text-right' }, 'Amount'),
+        footer: ({ table }) => {
+            const total = table.getFilteredRowModel().rows.reduce((sum: number, row: any) => sum + Number.parseFloat(row.getValue('amount')), 0)
+            const formatted = new Intl.NumberFormat('en-PH', {
+                style: 'currency',
+                currency: 'PHP'
+            }).format(total)
+            return h('div', { class: 'text-primary text-right' }, formatted)
+        },
+        cell: ({ row }) => {
+            const amount = parseFloat(row.getValue('amount') as string)
+            const formatted = new Intl.NumberFormat('en-PH', {
+                style: 'currency',
+                currency: 'PHP'
+            }).format(amount)
+            return h('div', { class: 'text-right font-bold' }, formatted)
+        }
+    }
+]
+
 
 const { isOpen } = useWorkflowSlideover()
 
@@ -94,6 +123,22 @@ const reviewStats = computed(() => {
     return stats
 })
 
+const documentStats = computed(() => {
+    const stats = {
+        Verified: 0,
+        Pending: 0,
+        Missing: 0
+    }
+
+    task.value?.documents?.forEach(doc => {
+        if (doc.status in stats) {
+            stats[doc.status as keyof typeof stats]++
+        }
+    })
+
+    return stats
+})
+
 const dynamicTabs = computed(() => {
     return WORKFLOW_TABS.map(tab => {
         if (tab.slot === 'dept-clearances') {
@@ -105,6 +150,30 @@ const dynamicTabs = computed(() => {
                     ...tab.badge,
                     label: `${cleared}/${total}`,
                     color: (cleared === total ? 'green' : 'yellow') as any
+                }
+            }
+        }
+        if (tab.slot === 'documents') {
+            const total = task.value?.documents?.length || 0
+            const verified = documentStats.value.Verified
+            return {
+                ...tab,
+                badge: {
+                    ...tab.badge,
+                    label: `${verified}/${total}`,
+                    color: (verified === total ? 'green' : 'yellow') as any
+                }
+            }
+        }
+        if (tab.slot === 'fees-payment') {
+            const isPaid = paymentInfo.value?.status === 'Fully Paid' || paymentInfo.value?.status === 'Paid'
+            const label = isPaid ? 'Paid' : 'Unpaid'
+            return {
+                ...tab,
+                badge: {
+                    ...tab.badge,
+                    label,
+                    color: (isPaid ? 'green' : 'red') as any
                 }
             }
         }
@@ -133,70 +202,38 @@ const dynamicTimeline = computed(() => {
     return generateTimeline(task.value)
 })
 
-type businessActivity = {
-    lineOfBusiness: string
-    units: number
-    capitalization: number
+
+const businessInfoTabs = ref<TabsItem[]>(BUSINESS_INFO_TABS as TabsItem[])
+const ownerInfo = computed(() => task.value?.ownerInfo)
+const businessDetails = computed(() => task.value?.businessDetails)
+const businessActivities = computed(() => task.value?.businessActivities || [])
+const feeItems = computed(() => task.value?.feeItems || [])
+const paymentInfo = computed(() => task.value?.paymentInfo)
+
+// Modal states
+const isReturnModalOpen = ref(false)
+const isRejectModalOpen = ref(false)
+const isApproveModalOpen = ref(false)
+
+const returnReason = ref('')
+const rejectReason = ref('')
+
+const handleConfirmReturn = () => {
+    console.log('Returning with reason:', returnReason.value)
+    isReturnModalOpen.value = false
+    returnReason.value = ''
 }
 
+const handleConfirmReject = () => {
+    console.log('Rejecting with reason:', rejectReason.value)
+    isRejectModalOpen.value = false
+    rejectReason.value = ''
+}
 
-const data = ref<businessActivity[]>([
-    {
-        lineOfBusiness: 'Hotel Operations',
-        units: 1,
-        capitalization: 180000000.00
-    },
-    {
-        lineOfBusiness: 'Restaurant / Food Service',
-        units: 3,
-        capitalization: 25000000.00
-    },
-    {
-        lineOfBusiness: 'Convention / Events Center',
-        units: 1,
-        capitalization: 45000000.00
-    },
-    {
-        lineOfBusiness: 'Spa & Wellness',
-        units: 1,
-        capitalization: 12000000.00
-    }
-])
-
-const businessActivityColumns: TableColumn<businessActivity>[] = [
-    {
-        accessorKey: 'lineOfBusiness',
-        header: 'Line of Business',
-        footer: 'Total'
-    },
-    {
-        accessorKey: 'units',
-        header: 'Units',
-        footer: ({ table }) => {
-            const total = table.getFilteredRowModel().rows.reduce((sum, row) => sum + Number.parseFloat(row.getValue('units')), 0)
-            return total
-        }
-    },
-    {
-        accessorKey: 'capitalization',
-        header: 'Capitalization',
-        footer: ({ table }) => {
-            const total = table.getFilteredRowModel().rows.reduce((sum, row) => sum + Number.parseFloat(row.getValue('capitalization')), 0)
-            const formatted = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'PHP'
-            }).format(total)
-            return h('span', { class: 'text-primary' }, formatted)
-        },
-        cell: ({ row }) => {
-            const amount = Number.parseFloat(row.getValue('capitalization'))
-            return new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'PHP'
-            }).format(amount)
-        }
-    }
-]
+const handleConfirmApprove = () => {
+    console.log('Approving application')
+    isApproveModalOpen.value = false
+}
 </script>
 
 <template>
@@ -234,15 +271,10 @@ const businessActivityColumns: TableColumn<businessActivity>[] = [
             </div>
 
             <div class="flex items-center gap-2">
-                <!-- <UButton icon="i-lucide-list-todo" color="neutral" variant="subtle" @click="openSlideover" />
-                <UButton icon="i-lucide-download" color="neutral" variant="subtle" /> -->
-                <!-- <UButton color="neutral" icon="i-lucide-list-check" variant="subtle" label="Activity Timeline"
-                    @click="openSlideover" />
-                <UButton color="neutral" icon="i-lucide-file-input" variant="subtle" label="Export to PDF" />
-                <USeparator orientation="vertical" class="h-6 px-2" /> -->
-                <UButton color="amber" icon="i-lucide-rotate-ccw" label="Return" />
-                <UButton color="red" icon="i-lucide-circle-x" label="Reject" />
-                <UButton color="green" icon="i-lucide-circle-check" label="Approve" />
+                <!-- action buttons -->
+                <UButton color="amber" icon="i-lucide-rotate-ccw" label="Return" @click="isReturnModalOpen = true" />
+                <UButton color="red" icon="i-lucide-circle-x" label="Reject" @click="isRejectModalOpen = true" />
+                <UButton color="green" icon="i-lucide-circle-check" label="Approve" @click="isApproveModalOpen = true" />
             </div>
         </div>
 
@@ -297,137 +329,61 @@ const businessActivityColumns: TableColumn<businessActivity>[] = [
                 </UCard>
             </template>
             <template #business-info>
+                <UTabs :items="businessInfoTabs" variant="link" orientation="vertical"
+                    :ui="{ root: 'items-stretch gap-4', indicator: 'start-auto end-0', list: ' gap-2 flex-1 border-s-0 border-e' }"
+                    class="w-full">
+                    <template #owner-info>
+                        <OwnerInfoCard v-if="ownerInfo" :owner="ownerInfo" />
+                    </template>
+                    <template #business-details>
+                        <BusinessDetailsCard v-if="businessDetails" :details="businessDetails" />
+                    </template>
+                    <template #business-activity>
+                        <BusinessActivityCard v-if="businessActivities" :activities="businessActivities" />
+                    </template>
+                </UTabs>
+            </template>
+            <template #documents>
                 <UCard>
                     <template #header>
                         <div class="flex items-center gap-2">
-                            <h3 class="font-bold">Owner Information</h3>
-                        </div>
-                    </template>
-                    <div class="grid grid-cols-3 gap-5">
-                        <div class="col-span-2 grid grid-cols-2 gap-x-5 gap-y-3">
-                            <div class="">
-                                <div class="text-xs text-dimmed">Full Name</div>
-                                <div class="text-sm">Angela Santos</div>
-                            </div>
-                            <div class="">
-                                <div class="text-xs text-dimmed">Contact Number</div>
-                                <div class="text-sm">+63 917 812 3456</div>
-                            </div>
-                            <div class="">
-                                <div class="text-xs text-dimmed">Email Address</div>
-                                <div class="text-sm">angela@email.com</div>
-                            </div>
-                            <div class="">
-                                <div class="text-xs text-dimmed">Nationality</div>
-                                <div class="text-sm">Filipino</div>
-                            </div>
-                            <div class="col-span-2">
-                                <div class="text-xs text-dimmed">Address</div>
-                                <div class="text-sm">Unit 2401, One Ayala Tower, Makati Avenue cor. Edsa, Makati City
-                                    1227</div>
-                            </div>
-                        </div>
-                        <div
-                            class="rounded-lg overflow-hidden border border-default h-[160px] bg-elevated flex items-center justify-center relative">
-                            <img src="https://images.unsplash.com/photo-1723002093542-807b783ccf07?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5pbGElMjBjaXR5JTIwbWFwJTIwc2F0ZWxsaXRlJTIwdmlld3xlbnwxfHx8fDE3NzA2MjAwODF8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080&amp;utm_source=figma&amp;utm_medium=referral"
-                                alt="Map" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div
-                                    class="bg-elevated/90 backdrop-blur-sm rounded-lg px-3 py-1.5 shadow-sm flex items-center gap-1.5">
-                                    <UIcon name="i-lucide-map-pin" class="size-5 text-primary" /><span
-                                        class="text-xs font-semibold">Makati City</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </UCard>
-                <UCard class="mt-4">
-                    <template #header>
-                        <div class="flex items-center gap-2">
-                            <h3 class="font-bold">Business Details</h3>
-                        </div>
-                    </template>
-                    <div class="grid grid-cols-3 gap-x-5 gap-y-3">
-                        <div class="">
-                            <div class="text-xs text-dimmed">Application Type
-                            </div>
-                            <div class="text-sm text-primary">Business Permit Renewal
-                            </div>
-                        </div>
-                        <div class="">
-                            <div class="text-xs text-dimmed">Business Name</div>
-                            <div class="text-sm">Metro Pharma Inc.</div>
-                        </div>
-                        <div class="">
-                            <div class="text-xs text-dimmed">Ownership Type</div>
-                            <div class="text-sm">Corporation</div>
-                        </div>
-                        <div class="">
-                            <div class="text-xs text-dimmed">DTI/SEC Number</div>
-                            <div class="text-sm">SEC-2024-001234567</div>
-                        </div>
-                        <div class="">
-                            <div class="text-xs text-dimmed">DTI/SEC Date</div>
-                            <div class="text-sm">March 15, 2024</div>
-                        </div>
-                        <div class="">
-                            <div class="text-xs text-dimmed">TIN</div>
-                            <div class="text-sm">123-456-789-000</div>
-                        </div>
-                        <div class="">
-                            <div class="text-xs text-dimmed">Business Area</div>
-                            <div class="text-sm">2,500 sqm</div>
-                        </div>
-                        <div class="">
-                            <div class="text-xs text-dimmed">No. of Employees
-                            </div>
-                            <div class="text-sm">245</div>
-                        </div>
-                        <div class="">
-                            <div class="text-xs text-dimmed">Ownership of Space
-                            </div>
-                            <div class="text-sm">Rented</div>
-                        </div>
-                        <div class="col-span-2">
-                            <div class="text-xs text-dimmed">Business Address
-                            </div>
-                            <div class="text-sm">123 Ayala Avenue, Makati
-                                City 1227
-                            </div>
-                        </div>
-                        <div class="">
-                            <div class="text-xs text-dimmed">Gov't Incentive
-                            </div>
-                            <div class="text-sm text-primary">Yes — BOI Registered</div>
-                        </div>
-                    </div>
-                </UCard>
-                <UCard :ui="{ body: 'p-0 sm:p-0' }" class="mt-4">
-                    <template #header>
-                        <div class="flex items-center gap-2">
-                            <h3 class="font-bold">Business Activities</h3>
-                        </div>
-                    </template>
-                    <UTable :data="data" :columns="businessActivityColumns" class="flex-1" />
-                </UCard>
-            </template>
-            <template #documents>
-                <UCard :ui="{ body: 'p-0 sm:p-0' }">
-                    <template #header>
-                        <div class="flex items-center gap-2">
                             <h3 class="font-bold">Documents</h3>
+
+                            <!-- document stat -->
+                            <!-- verified -->
+                            <UBadge v-if="documentStats.Verified > 0" icon="i-lucide-circle-check-big"
+                                :label="documentStats.Verified.toString()" color="green" variant="soft" size="sm"
+                                class="rounded-full" />
+                            <!-- pending -->
+                            <UBadge v-if="documentStats.Pending > 0" icon="i-lucide-clock"
+                                :label="documentStats.Pending.toString()" color="yellow" variant="soft" size="sm"
+                                class="rounded-full" />
+                            <!-- missing -->
+                            <UBadge v-if="documentStats.Missing > 0" icon="i-lucide-circle-alert"
+                                :label="documentStats.Missing.toString()" color="red" variant="soft" size="sm"
+                                class="rounded-full" />
                         </div>
                     </template>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <DocumentCard v-for="doc in task.documents" :key="doc.title" :document="doc" />
+                    </div>
                 </UCard>
             </template>
             <template #fees-payment>
-                <UCard :ui="{ body: 'p-0 sm:p-0' }">
-                    <template #header>
-                        <div class="flex items-center gap-2">
-                            <h3 class="font-bold">Fees & Payment</h3>
-                        </div>
-                    </template>
-                </UCard>
+                <div class="grid grid-cols-5 gap-4 mb-5">
+                    <UCard :ui="{ body: 'p-0 sm:p-0' }" class="col-span-3">
+                        <template #header>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-bold">Fees & Payment</h3>
+                            </div>
+                        </template>
+                        <UTable :data="feeItems" :columns="feeColumns" class="w-full" />
+                    </UCard>
+                    <div class="col-span-2">
+                        <!-- payment status -->
+                        <PaymentStatusCard v-if="paymentInfo" :payment="paymentInfo" />
+                    </div>
+                </div>
             </template>
         </UTabs>
     </div>
@@ -437,4 +393,49 @@ const businessActivityColumns: TableColumn<businessActivity>[] = [
             <Timeline :items="dynamicTimeline" />
         </template>
     </USlideover>
+
+    <!-- Create UModal for each of action buttons -->
+    <!-- Return Modal -->
+    <UModal v-model:open="isReturnModalOpen" title="Return Application" description="Please provide a reason for returning this application.">
+        <template #body>
+            <div class="space-y-4">
+                <UFormField label="Remarks/Reason" required>
+                    <UTextarea v-model="returnReason" placeholder="Enter reason for returning..." class="w-full" autofocus />
+                </UFormField>
+            </div>
+        </template>
+        <template #footer>
+            <div class="flex justify-end gap-2">
+                <UButton color="neutral" variant="ghost" label="Cancel" @click="isReturnModalOpen = false" />
+                <UButton color="amber" label="Confirm Return" @click="handleConfirmReturn" />
+            </div>
+        </template>
+    </UModal>
+
+    <!-- Reject Modal -->
+    <UModal v-model:open="isRejectModalOpen" title="Reject Application" description="Are you sure you want to reject this application? This action cannot be undone.">
+        <template #body>
+            <div class="space-y-4">
+                <UFormField label="Remarks/Reason" required>
+                    <UTextarea v-model="rejectReason" placeholder="Enter reason for rejection..." class="w-full" autofocus />
+                </UFormField>
+            </div>
+        </template>
+        <template #footer>
+            <div class="flex justify-end gap-2">
+                <UButton color="neutral" variant="ghost" label="Cancel" @click="isRejectModalOpen = false" />
+                <UButton color="red" label="Reject Application" @click="handleConfirmReject" />
+            </div>
+        </template>
+    </UModal>
+
+    <!-- Approve Modal -->
+    <UModal v-model:open="isApproveModalOpen" title="Approve Application" description="Are you sure you want to approve this application?">
+        <template #footer>
+            <div class="flex justify-end gap-2">
+                <UButton color="neutral" variant="ghost" label="Cancel" @click="isApproveModalOpen = false" />
+                <UButton color="green" label="Approve Application" @click="handleConfirmApprove" />
+            </div>
+        </template>
+    </UModal>
 </template>
