@@ -22,7 +22,7 @@ const statusColor = computed(() => props.payment.status === 'Fully Paid' ? 'gree
         statusColor === 'green' ? 'ring-green/30 bg-linear-to-tl from-green/10 from-5% to-default' : 'ring-red/30 bg-linear-to-tl from-red/10 from-5% to-default'
     ]">
         <div class="flex items-center gap-4 mb-6">
-            <UBadge icon="i-lucide-banknote" :color="statusColor" variant="soft" size="lg"
+            <UBadge icon="i-lucide-receipt-text" :color="statusColor" variant="soft" size="lg"
                 :ui="{ base: 'p-2.5 rounded-lg' }" />
             <div>
                 <p class="text-xs text-dimmed uppercase tracking-wider font-semibold">Payment Status</p>
