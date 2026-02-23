@@ -210,29 +210,59 @@ const businessActivities = computed(() => task.value?.businessActivities || [])
 const feeItems = computed(() => task.value?.feeItems || [])
 const paymentInfo = computed(() => task.value?.paymentInfo)
 
-// Modal states
-const isReturnModalOpen = ref(false)
-const isRejectModalOpen = ref(false)
-const isApproveModalOpen = ref(false)
+// Decisions Modal
+type DecisionType = 'approve' | 'return' | 'reject'
+const isDecisionModalOpen = ref(false)
+const decisionType = ref<DecisionType>('approve')
+const remarks = ref('')
+const conditions = ref('')
+const affixSignature = ref(false)
 
-const returnReason = ref('')
-const rejectReason = ref('')
+const decisionConfig = computed(() => {
+    switch (decisionType.value) {
+        case 'approve':
+            return {
+                title: 'Approve Application',
+                buttonLabel: 'Approve Permit',
+                buttonColor: 'green' as const,
+                icon: 'i-lucide-circle-check',
+                description: 'Are you sure you want to approve this application?'
+            }
+        case 'return':
+            return {
+                title: 'Return Application',
+                buttonLabel: 'Return Application',
+                buttonColor: 'amber' as const,
+                icon: 'i-lucide-rotate-ccw',
+                description: 'Please provide a reason for returning this application.'
+            }
+        case 'reject':
+            return {
+                title: 'Reject Application',
+                buttonLabel: 'Reject Application',
+                buttonColor: 'red' as const,
+                icon: 'i-lucide-circle-x',
+                description: 'Are you sure you want to reject this application? This action cannot be undone.'
+            }
+    }
+})
 
-const handleConfirmReturn = () => {
-    console.log('Returning with reason:', returnReason.value)
-    isReturnModalOpen.value = false
-    returnReason.value = ''
+const openDecision = (type: DecisionType) => {
+    decisionType.value = type
+    isDecisionModalOpen.value = true
 }
 
-const handleConfirmReject = () => {
-    console.log('Rejecting with reason:', rejectReason.value)
-    isRejectModalOpen.value = false
-    rejectReason.value = ''
-}
-
-const handleConfirmApprove = () => {
-    console.log('Approving application')
-    isApproveModalOpen.value = false
+const handleConfirmDecision = () => {
+    console.log(`Action: ${decisionType.value}`, {
+        remarks: remarks.value,
+        conditions: conditions.value,
+        affixSignature: affixSignature.value
+    })
+    isDecisionModalOpen.value = false
+    // Reset state
+    remarks.value = ''
+    conditions.value = ''
+    affixSignature.value = false
 }
 </script>
 
@@ -272,9 +302,9 @@ const handleConfirmApprove = () => {
 
             <div class="flex items-center gap-2">
                 <!-- action buttons -->
-                <UButton color="amber" icon="i-lucide-rotate-ccw" label="Return" @click="isReturnModalOpen = true" />
-                <UButton color="red" icon="i-lucide-circle-x" label="Reject" @click="isRejectModalOpen = true" />
-                <UButton color="green" icon="i-lucide-circle-check" label="Approve" @click="isApproveModalOpen = true" />
+                <UButton color="amber" icon="i-lucide-rotate-ccw" label="Return" @click="openDecision('return')" />
+                <UButton color="red" icon="i-lucide-circle-x" label="Reject" @click="openDecision('reject')" />
+                <UButton color="green" icon="i-lucide-circle-check" label="Approve" @click="openDecision('approve')" />
             </div>
         </div>
 
@@ -394,47 +424,70 @@ const handleConfirmApprove = () => {
         </template>
     </USlideover>
 
-    <!-- Create UModal for each of action buttons -->
-    <!-- Return Modal -->
-    <UModal v-model:open="isReturnModalOpen" title="Return Application" description="Please provide a reason for returning this application.">
+    <!-- Consolidated Decision Modal -->
+    <UModal v-model:open="isDecisionModalOpen" :title="decisionConfig.title" :description="decisionConfig.description"
+        :ui="{ header: 'items-start font-bold', title: 'text-xl', description: 'text-sm text-dimmed leading-snug', close: 'size-5' }">
+        <template #title>
+            <div class="flex items-center gap-3">
+                <UBadge icon="i-lucide-award" color="yellow" variant="soft" size="lg"
+                    :ui="{ base: 'p-3 rounded-full' }" />
+                <div>
+                    <h3 class="text-xl font-extrabold leading-none">Mayor's Decision</h3>
+                    <p class="text-sm font-medium text-dimmed mt-1">Submit your final decision for this application</p>
+                </div>
+            </div>
+        </template>
         <template #body>
-            <div class="space-y-4">
-                <UFormField label="Remarks/Reason" required>
-                    <UTextarea v-model="returnReason" placeholder="Enter reason for returning..." class="w-full" autofocus />
-                </UFormField>
-            </div>
-        </template>
-        <template #footer>
-            <div class="flex justify-end gap-2">
-                <UButton color="neutral" variant="ghost" label="Cancel" @click="isReturnModalOpen = false" />
-                <UButton color="amber" label="Confirm Return" @click="handleConfirmReturn" />
-            </div>
-        </template>
-    </UModal>
+            <div class="space-y-6">
+                <!-- Decision Toggles -->
+                <div class="grid grid-cols-3 gap-2 p-1 bg-neutral-100/50 dark:bg-neutral-800/100 rounded-lg">
+                    <UButton :color="decisionType === 'approve' ? 'green' : 'neutral'"
+                        :variant="decisionType === 'approve' ? 'soft' : 'ghost'" label="Approve"
+                        icon="i-lucide-circle-check" block class="h-10 font-bold" @click="decisionType = 'approve'" />
+                    <UButton :color="decisionType === 'return' ? 'amber' : 'neutral'"
+                        :variant="decisionType === 'return' ? 'soft' : 'ghost'" label="Return"
+                        icon="i-lucide-rotate-ccw" block class="h-10 font-bold" @click="decisionType = 'return'" />
+                    <UButton :color="decisionType === 'reject' ? 'red' : 'neutral'"
+                        :variant="decisionType === 'reject' ? 'soft' : 'ghost'" label="Reject" icon="i-lucide-circle-x"
+                        block class="h-10 font-bold" @click="decisionType = 'reject'" />
+                </div>
 
-    <!-- Reject Modal -->
-    <UModal v-model:open="isRejectModalOpen" title="Reject Application" description="Are you sure you want to reject this application? This action cannot be undone.">
-        <template #body>
-            <div class="space-y-4">
-                <UFormField label="Remarks/Reason" required>
-                    <UTextarea v-model="rejectReason" placeholder="Enter reason for rejection..." class="w-full" autofocus />
-                </UFormField>
-            </div>
-        </template>
-        <template #footer>
-            <div class="flex justify-end gap-2">
-                <UButton color="neutral" variant="ghost" label="Cancel" @click="isRejectModalOpen = false" />
-                <UButton color="red" label="Reject Application" @click="handleConfirmReject" />
-            </div>
-        </template>
-    </UModal>
+                <div class="space-y-4">
+                    <UFormField label="Remarks" label-class="font-bold text-toned" description="">
+                        <UTextarea v-model="remarks" placeholder="Add your remarks here..." class="w-full" :rows="4"
+                            autofocus />
+                    </UFormField>
 
-    <!-- Approve Modal -->
-    <UModal v-model:open="isApproveModalOpen" title="Approve Application" description="Are you sure you want to approve this application?">
+                    <UFormField label="Conditions (optional)" label-class="font-bold text-toned">
+                        <UTextarea v-model="conditions" placeholder="e.g., Subject to environmental compliance..."
+                            class="w-full" :rows="3" />
+                    </UFormField>
+
+                    <div
+                        class="flex items-center justify-between p-4 bg-neutral-50 dark:bg-neutral-900/50 rounded-xl border border-default">
+                        <div class="flex items-center gap-3">
+                            <UIcon name="i-lucide-signature" class="size-5 text-toned" />
+                            <span class="text-sm font-bold text-toned">Affix Digital Signature</span>
+                        </div>
+                        <USwitch v-model="affixSignature" color="neutral" />
+                    </div>
+
+                    <div class="flex gap-2">
+                        <UButton icon="i-lucide-at-sign" label="Tag Dept" variant="soft" color="neutral" size="sm" />
+                        <UButton icon="i-lucide-message-square-more" label="Request Info" variant="soft" color="neutral"
+                            size="sm" />
+                        <UButton icon="i-lucide-paperclip" label="Attach" variant="soft" color="neutral" size="sm" />
+                    </div>
+                </div>
+            </div>
+        </template>
         <template #footer>
-            <div class="flex justify-end gap-2">
-                <UButton color="neutral" variant="ghost" label="Cancel" @click="isApproveModalOpen = false" />
-                <UButton color="green" label="Approve Application" @click="handleConfirmApprove" />
+            <div class="flex w-full gap-3">
+                <UButton color="neutral" variant="outline" label="Cancel" class="flex-1 h-12 font-bold"
+                    @click="isDecisionModalOpen = false" />
+                <UButton :color="decisionConfig.buttonColor" :label="decisionConfig.buttonLabel"
+                    :icon="decisionType === 'approve' ? 'i-lucide-send' : (decisionType === 'return' ? 'i-lucide-undo-2' : 'i-lucide-send')"
+                    class="flex-[2] h-12 font-bold" @click="handleConfirmDecision" />
             </div>
         </template>
     </UModal>
