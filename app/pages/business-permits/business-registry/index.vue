@@ -1,0 +1,3 @@
+<template>
+    Business Registry
+</template>

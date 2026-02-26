@@ -40,9 +40,9 @@ const items: NavigationMenuItem[][] = [
                 to: '/'
             },
             {
-                label: 'Smart Workflow',
-                icon: 'i-lucide-workflow',
-                to: '/smart-workflow'
+                label: 'Business Permits',
+                icon: 'i-lucide-building-2',
+                to: '/business-permits'
             },
             {
                 label: 'Applications',

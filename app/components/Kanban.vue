@@ -31,7 +31,7 @@ function onColumnScroll(e: Event, key: ColumnKey) {
 }
 
 function openTask(task: Task) {
-    navigateTo(`/smart-workflow/${task.id}`)
+    navigateTo(`/business-permits/permit-applications/${task.id}`)
 }
 
 // ✅ composable

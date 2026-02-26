@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn, TabsItem } from '@nuxt/ui'
-import type { Task, DeptReview, FeeItem } from '~/types/model'
+import type { Task, DeptReview, FeeItem, Document, DocItem } from '~/types/model'
 import { WORKFLOW_TABS, STEP_CONFIG, WORKFLOW_STEPS, BUSINESS_INFO_TABS } from '~/constants/workflow'
 import { useTimeline } from '~/composables/useTimeline'
 import { useTaskConfig } from '~/composables/useTaskConfig'
@@ -192,6 +192,14 @@ const dynamicSteps = computed(() => {
                 status: cleared === total ? 'done' : 'pending'
             }
         }
+        if (step.title === 'Payment') {
+            const isPaid = paymentInfo.value?.status === 'Fully Paid' || paymentInfo.value?.status === 'Paid'
+            return {
+                ...step,
+                description: paymentInfo.value?.status ?? 'Unpaid',
+                status: isPaid ? 'done' : 'pending'
+            }
+        }
         return step
     })
 })
@@ -224,7 +232,7 @@ const decisionConfig = computed(() => {
             return {
                 title: 'Approve Application',
                 buttonLabel: 'Approve Permit',
-                buttonColor: 'green' as const,
+                color: 'green' as const,
                 icon: 'i-lucide-circle-check',
                 description: 'Are you sure you want to approve this application?'
             }
@@ -232,15 +240,15 @@ const decisionConfig = computed(() => {
             return {
                 title: 'Return Application',
                 buttonLabel: 'Return Application',
-                buttonColor: 'amber' as const,
-                icon: 'i-lucide-rotate-ccw',
+                color: 'amber' as const,
+                icon: 'i-lucide-undo-2',
                 description: 'Please provide a reason for returning this application.'
             }
         case 'reject':
             return {
                 title: 'Reject Application',
                 buttonLabel: 'Reject Application',
-                buttonColor: 'red' as const,
+                color: 'red' as const,
                 icon: 'i-lucide-circle-x',
                 description: 'Are you sure you want to reject this application? This action cannot be undone.'
             }
@@ -264,45 +272,97 @@ const handleConfirmDecision = () => {
     conditions.value = ''
     affixSignature.value = false
 }
+
+const { openSlideover } = useWorkflowSlideover()
+
+// Document Preview
+const isPreviewOpen = ref(false)
+const selectedDocumentId = ref<string>('')
+
+const mappedDocuments = computed<DocItem[]>(() => {
+    if (!task.value?.documents) return []
+    return task.value.documents.map((doc, index) => ({
+        id: `doc-${index + 1}`,
+        name: doc.title,
+        status: (doc.status.toLowerCase() === 'missing' ? 'missing' : doc.status.toLowerCase() === 'verified' ? 'verified' : 'pending') as any,
+        verifiedBy: doc.verifiedBy || 'System',
+        type: 'PDF',
+        fileSize: '1.2 MB',
+        uploadedBy: task.value?.ownerInfo?.fullName || 'Applicant',
+        uploadedDate: task.value?.submitted || '',
+        verifiedDate: doc.status === 'Verified' ? new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '',
+        pages: 1,
+        docNumber: `DOC-${task.value?.id}-00${index + 1}`,
+        issuingAuthority: 'Standard Authority',
+        validUntil: 'N/A',
+        remarks: ''
+    }))
+})
+
+const selectedDocItem = computed(() => {
+    return mappedDocuments.value.find(d => d.id === selectedDocumentId.value) || mappedDocuments.value[0]
+})
+
+const handleViewDocument = (doc: Document) => {
+    const index = task.value?.documents?.findIndex(d => d.title === doc.title) ?? 0
+    const mapped = mappedDocuments.value[index]
+    if (mapped) {
+        selectedDocumentId.value = mapped.id
+    }
+    isPreviewOpen.value = true
+}
+
 </script>
 
 <template>
     <div v-if="task" class="space-y-6">
+        <!-- <div class="flex justify-between items-center">
+            <UButton icon="i-lucide-arrow-left" label="Back to Board" variant="ghost" to="/business-permits/permit-applications" />
+            <div class="flex gap-2">
+                <UButton label="Activity Timeline" color="neutral" variant="outline" @click="openSlideover" />
+                <UButton label="Export PDF" color="neutral" variant="outline" />
+            </div>
+        </div> -->
         <div class="flex justify-between items-center">
-            <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                    <UIcon name="i-lucide-building-2" class="size-5" />
-                    <h3 class="text-xl font-bold">
-                        {{ task.title }}
-                    </h3>
-                    <UBadge v-if="task" v-bind="badgeConfig[task.type]" size="sm"
-                        :ui="{ label: 'uppercase font-bold' }" />
-                </div>
+            <div class="flex items-center gap-4">
+                <UButton icon="i-lucide-arrow-left" color="neutral" variant="ghost" to="/business-permits/permit-applications" />
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <UIcon name="i-lucide-building-2" class="size-5" />
+                        <h3 class="text-xl font-bold">
+                            {{ task.title }}
+                        </h3>
+                        <UBadge v-if="task" v-bind="badgeConfig[task.type]" size="sm"
+                            :ui="{ label: 'uppercase font-bold' }" />
+                    </div>
 
-                <!-- <div class="text-xs text-dimmed">
-                    #0000{{ task.id }} • {{ task.industry }} • <span :class="getAgingConfig(task.aging).class">{{
-                        task.aging }} Days {{ statusLabels[task.status] }}</span>
-                </div> -->
+                    <!-- <div class="text-xs text-dimmed">
+                        #0000{{ task.id }} • {{ task.industry }} • <span :class="getAgingConfig(task.aging).class">{{
+                            task.aging }} Days {{ statusLabels[task.status] }}</span>
+                    </div> -->
 
-                <div class="flex items-center gap-4 flex-wrap text-xs text-dimmed">
-                    <span class="inline-flex items-center gap-1.5">
-                        <UIcon name="i-lucide-tag" />{{ task.permit }}
-                    </span>
-                    <span class="inline-flex items-center gap-1.5">
-                        <UIcon name="i-lucide-hash" />BP-2026-000{{ task.id }}
-                    </span>
-                    <span class="inline-flex items-center gap-1.5">
-                        <UIcon name="i-lucide-briefcase" />{{ task.industry }}
-                    </span>
-                    <span class="inline-flex items-center gap-1.5" :class="getAgingConfig(task.aging).class">
-                        <UIcon name="i-lucide-clock" />{{ task.aging }} Days {{ statusLabels[task.status] }}
-                    </span>
+                    <div class="flex items-center gap-4 flex-wrap text-xs text-dimmed">
+                        <span class="inline-flex items-center gap-1.5">
+                            <UIcon name="i-lucide-tag" />{{ task.permit }}
+                        </span>
+                        <span class="inline-flex items-center gap-1.5">
+                            <UIcon name="i-lucide-hash" />BP-2026-000{{ task.id }}
+                        </span>
+                        <span class="inline-flex items-center gap-1.5">
+                            <UIcon name="i-lucide-briefcase" />{{ task.industry }}
+                        </span>
+                        <span class="inline-flex items-center gap-1.5" :class="getAgingConfig(task.aging).class">
+                            <UIcon name="i-lucide-clock" />{{ task.aging }} Days {{ statusLabels[task.status] }}
+                        </span>
+                    </div>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
+                <UButton label="Activity Timeline" color="neutral" variant="outline" @click="openSlideover" />
+                <UButton label="Export PDF" color="neutral" variant="outline" />
                 <!-- action buttons -->
-                <UButton color="amber" icon="i-lucide-rotate-ccw" label="Return" @click="openDecision('return')" />
+                <UButton color="amber" icon="i-lucide-undo-2" label="Return" @click="openDecision('return')" />
                 <UButton color="red" icon="i-lucide-circle-x" label="Reject" @click="openDecision('reject')" />
                 <UButton color="green" icon="i-lucide-circle-check" label="Approve" @click="openDecision('approve')" />
             </div>
@@ -359,7 +419,12 @@ const handleConfirmDecision = () => {
                 </UCard>
             </template>
             <template #business-info>
-                <UTabs :items="businessInfoTabs" variant="link" orientation="vertical"
+                <div class="flex flex-col gap-4">
+                    <OwnerInfoCard v-if="ownerInfo" :owner="ownerInfo" />
+                    <BusinessDetailsCard v-if="businessDetails" :details="businessDetails" />
+                    <BusinessActivityCard v-if="businessActivities" :activities="businessActivities" />
+                </div>
+                <!-- <UTabs :items="businessInfoTabs" variant="link" orientation="vertical"
                     :ui="{ root: 'items-stretch gap-4', indicator: 'start-auto end-0', list: ' gap-2 flex-1 border-s-0 border-e' }"
                     class="w-full">
                     <template #owner-info>
@@ -371,7 +436,7 @@ const handleConfirmDecision = () => {
                     <template #business-activity>
                         <BusinessActivityCard v-if="businessActivities" :activities="businessActivities" />
                     </template>
-                </UTabs>
+                </UTabs> -->
             </template>
             <template #documents>
                 <UCard>
@@ -395,7 +460,7 @@ const handleConfirmDecision = () => {
                         </div>
                     </template>
                     <div class="grid grid-cols-2 gap-2.5">
-                        <DocumentCard v-for="doc in task.documents" :key="doc.title" :document="doc" />
+                        <DocumentCard v-for="doc in task.documents" :key="doc.title" :document="doc" @view="handleViewDocument" />
                     </div>
                 </UCard>
             </template>
@@ -425,15 +490,14 @@ const handleConfirmDecision = () => {
     </USlideover>
 
     <!-- Consolidated Decision Modal -->
-    <UModal v-model:open="isDecisionModalOpen" :title="decisionConfig.title" :description="decisionConfig.description"
-        :ui="{ header: 'items-start font-bold', title: 'text-xl', description: 'text-sm text-dimmed leading-snug', close: 'size-5' }">
+    <UModal v-model:open="isDecisionModalOpen">
         <template #title>
             <div class="flex items-center gap-3">
-                <UBadge icon="i-lucide-award" color="yellow" variant="soft" size="lg"
+                <UBadge icon="i-lucide-award" :color="decisionConfig.color" variant="soft" size="lg"
                     :ui="{ base: 'p-3 rounded-full' }" />
                 <div>
-                    <h3 class="text-xl font-extrabold leading-none">Mayor's Decision</h3>
-                    <p class="text-sm font-medium text-dimmed mt-1">Submit your final decision for this application</p>
+                    <h3 class="text-lg font-bold leading-none">Mayor's Decision</h3>
+                    <p class="text-sm font-normal text-dimmed mt-1 leading-none">Submit your final decision for this application</p>
                 </div>
             </div>
         </template>
@@ -446,31 +510,31 @@ const handleConfirmDecision = () => {
                         icon="i-lucide-circle-check" block @click="decisionType = 'approve'" />
                     <UButton :color="decisionType === 'return' ? 'amber' : 'neutral'"
                         :variant="decisionType === 'return' ? 'soft' : 'ghost'" label="Return"
-                        icon="i-lucide-rotate-ccw" block @click="decisionType = 'return'" />
+                        icon="i-lucide-undo-2" block @click="decisionType = 'return'" />
                     <UButton :color="decisionType === 'reject' ? 'red' : 'neutral'"
                         :variant="decisionType === 'reject' ? 'soft' : 'ghost'" label="Reject" icon="i-lucide-circle-x"
                         block @click="decisionType = 'reject'" />
                 </div>
 
+                <!-- decision description -->
+                <UAlert :title="decisionConfig.description" :color="decisionConfig.color" variant="subtle" />
+
                 <div class="space-y-4">
-                    <UFormField label="Remarks" label-class="font-bold text-toned" description="">
-                        <UTextarea v-model="remarks" placeholder="Add your remarks here..." class="w-full" :rows="4"
-                            autofocus />
+                    <UFormField label="Remarks">
+                        <UTextarea v-model="remarks" placeholder="Add your remarks here..." class="w-full" :rows="4" autofocus />
                     </UFormField>
 
-                    <UFormField label="Conditions (optional)" label-class="font-bold text-toned">
-                        <UTextarea v-model="conditions" placeholder="e.g., Subject to environmental compliance..."
-                            class="w-full" :rows="3" />
+                    <UFormField label="Conditions (optional)">
+                        <UTextarea v-model="conditions" placeholder="e.g., Subject to environmental compliance..." class="w-full" :rows="3" />
                     </UFormField>
 
-                    <div
-                        class="flex items-center justify-between p-4 bg-neutral-50 dark:bg-neutral-900/50 rounded-xl border border-default">
+                    <UCard variant="subtle" :ui="{ root: 'rounded-lg', body: 'sm:p-4 flex items-center justify-between' }">
                         <div class="flex items-center gap-3">
                             <UIcon name="i-lucide-signature" class="size-5 text-toned" />
                             <span class="text-sm font-bold text-toned">Affix Digital Signature</span>
                         </div>
                         <USwitch v-model="affixSignature" color="neutral" />
-                    </div>
+                    </UCard>
 
                     <div class="flex gap-2">
                         <UButton icon="i-lucide-at-sign" label="Tag Dept" variant="soft" color="neutral" size="sm" />
@@ -482,13 +546,13 @@ const handleConfirmDecision = () => {
             </div>
         </template>
         <template #footer>
-            <div class="flex w-full gap-3">
-                <UButton color="neutral" variant="outline" label="Cancel" class="flex-1 h-12 font-bold"
-                    @click="isDecisionModalOpen = false" />
-                <UButton :color="decisionConfig.buttonColor" :label="decisionConfig.buttonLabel"
-                    :icon="decisionType === 'approve' ? 'i-lucide-send' : (decisionType === 'return' ? 'i-lucide-undo-2' : 'i-lucide-send')"
-                    class="flex-[2] h-12 font-bold" @click="handleConfirmDecision" />
+            <div class="flex w-full gap-2">
+                <UButton color="neutral" variant="ghost" label="Cancel" @click="isDecisionModalOpen = false" />
+                <UButton block :color="decisionConfig.color" :label="decisionConfig.buttonLabel"
+                    :icon="decisionConfig.icon" @click="handleConfirmDecision" />
             </div>
         </template>
     </UModal>
+
+    <DocumentPreview v-if="task?.documents" v-model="isPreviewOpen" :document="selectedDocItem" :documents="mappedDocuments" />
 </template>

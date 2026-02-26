@@ -7,6 +7,10 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const emit = defineEmits<{
+    (e: 'view', document: Document): void
+}>()
+
 const statusConfig = {
     Verified: { color: 'green', label: 'Verified' },
     Pending: { color: 'yellow', label: 'Pending' },
@@ -28,7 +32,7 @@ const config = computed(() => statusConfig[props.document.status])
                     <span v-if="document.verifiedBy" class="text-xs text-dimmed">by {{ document.verifiedBy }}</span>
                 </div>
             </div>
-            <UButton icon="i-lucide-eye" variant="link" size="sm" />
+            <UButton icon="i-lucide-eye" variant="link" size="sm" @click="emit('view', document)" />
         </div>
     </UCard>
 </template>

@@ -89,3 +89,19 @@ export interface PaymentInfo {
     amountPaid: number
 }
 
+export interface DocItem {
+    id: string
+    name: string
+    status: 'verified' | 'pending' | 'missing'
+    verifiedBy: string
+    type: string
+    fileSize: string
+    uploadedBy: string
+    uploadedDate: string
+    verifiedDate: string
+    pages: number
+    docNumber: string
+    issuingAuthority: string
+    validUntil: string
+    remarks: string
+}
