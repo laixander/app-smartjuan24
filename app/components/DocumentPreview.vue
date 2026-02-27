@@ -44,9 +44,9 @@
                             title="Previous document">
                             <UIcon name="i-lucide-chevron-left" class="w-4 h-4" />
                         </button>
-                        <span class="text-xs text-neutral-400 font-medium px-2 min-w-[3rem] text-center">{{ currentIndex
-                            +
-                            1 }} / {{ viewableDocs.length }}</span>
+                        <span class="text-xs text-neutral-400 font-medium px-2 min-w-[3rem] text-center">
+                            {{ currentIndex + 1 }} / {{ viewableDocs.length }}
+                        </span>
                         <button @click="navigate('next')" :disabled="!hasNext"
                             class="p-2 rounded-md transition-colors flex items-center justify-center"
                             :class="hasNext ? 'text-neutral-400 hover:text-white hover:bg-white/10' : 'text-neutral-600 cursor-not-allowed'"
@@ -160,9 +160,10 @@
                 <UTabs :items="[
                     { label: 'Details', slot: 'details' as const },
                     { label: 'Audit Trail', slot: 'history' as const },
-                ]" variant="link" class="w-full pt-5" :ui="{ trigger: 'w-full', content: 'overflow-y-auto' }">
+                ]" variant="link" class="w-full pt-5 flex-1 flex flex-col min-h-0"
+                    :ui="{ trigger: 'w-full', content: 'flex-1 overflow-y-auto min-h-0' }">
                     <template #details>
-                        <div class="flex-1 overflow-y-auto px-6 py-6 space-y-8">
+                        <div class="px-6 py-6 space-y-8">
 
                             <!-- Verification Status -->
                             <UCard :ui="{ body: 'sm:p-4 space-y-3' }">
@@ -294,7 +295,7 @@
                         </div>
                     </template>
                     <template #history>
-                        <div class="flex-1 overflow-y-auto px-6 py-2">
+                        <div class="px-6 py-2">
                             <Timeline :items="timelineItems" />
                         </div>
                     </template>
