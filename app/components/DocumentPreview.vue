@@ -10,13 +10,17 @@
             <div class="flex-1 flex flex-col min-w-0 bg-white">
 
                 <!-- Toolbar -->
-                <div class="flex items-center justify-between px-5 py-3 bg-neutral-900 border-b border-neutral-800 shrink-0">
+                <div
+                    class="flex items-center justify-between px-5 py-3 bg-neutral-900 border-b border-neutral-800 shrink-0">
 
                     <div class="flex items-center gap-4">
-                        <UButton icon="i-lucide-arrow-left" label="Back to Documents" variant="link" color="neutral" size="sm" class="p-0" @click="close" />
-                        <USeparator orientation="vertical" :ui="{border: 'border-neutral-700'}" class="h-4" />
+                        <UButton icon="i-lucide-arrow-left" label="Back to Documents" variant="link" color="neutral"
+                            size="sm" class="p-0" @click="close" />
+                        <USeparator orientation="vertical" :ui="{ border: 'border-neutral-700' }" class="h-4" />
                         <div class="flex items-center gap-3">
-                            <UBadge icon="i-lucide-file-text" variant="soft" :color="currentDoc?.status === 'verified' ? 'green' : 'yellow'" class="p-2 rounded-lg" />
+                            <UBadge icon="i-lucide-file-text" variant="soft"
+                                :color="currentDoc?.status === 'verified' ? 'green' : 'yellow'"
+                                class="p-2 rounded-lg" />
                             <!-- <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                                 :class="currentDoc?.status === 'verified' ? 'bg-[#7AA541]/20' : 'bg-amber-500/20'">
                                 <UIcon name="i-lucide-file-text" class="w-4 h-4"
@@ -27,7 +31,7 @@
                                 <div
                                     class="text-xs text-white/30 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
                                     {{ currentDoc?.docNumber }} &middot; {{ currentDoc?.pages }} page{{
-                                    currentDoc?.pages !== 1 ? 's' : '' }} &middot; {{ currentDoc?.fileSize }}</div>
+                                        currentDoc?.pages !== 1 ? 's' : '' }} &middot; {{ currentDoc?.fileSize }}</div>
                             </div>
                         </div>
                     </div>
@@ -40,7 +44,8 @@
                             title="Previous document">
                             <UIcon name="i-lucide-chevron-left" class="w-4 h-4" />
                         </button>
-                        <span class="text-xs text-neutral-400 font-medium px-2 min-w-[3rem] text-center">{{ currentIndex +
+                        <span class="text-xs text-neutral-400 font-medium px-2 min-w-[3rem] text-center">{{ currentIndex
+                            +
                             1 }} / {{ viewableDocs.length }}</span>
                         <button @click="navigate('next')" :disabled="!hasNext"
                             class="p-2 rounded-md transition-colors flex items-center justify-center"
@@ -49,7 +54,7 @@
                             <UIcon name="i-lucide-chevron-right" class="w-4 h-4" />
                         </button>
 
-                        <USeparator orientation="vertical" :ui="{border: 'border-neutral-700'}" class="h-4 mx-2" />
+                        <USeparator orientation="vertical" :ui="{ border: 'border-neutral-700' }" class="h-4 mx-2" />
 
                         <!-- Zoom -->
                         <button @click="zoom = Math.max(50, zoom - 10)"
@@ -69,7 +74,7 @@
                             <UIcon name="i-lucide-maximize-2" class="w-4 h-4" />
                         </button>
 
-                        <USeparator orientation="vertical" :ui="{border: 'border-neutral-700'}" class="h-4 mx-2" />
+                        <USeparator orientation="vertical" :ui="{ border: 'border-neutral-700' }" class="h-4 mx-2" />
 
                         <!-- Actions -->
                         <button
@@ -88,7 +93,7 @@
                             <UIcon name="i-lucide-flag" class="w-4 h-4" />
                         </button>
 
-                        <USeparator orientation="vertical" :ui="{border: 'border-neutral-700'}" class="h-4 mx-2" />
+                        <USeparator orientation="vertical" :ui="{ border: 'border-neutral-700' }" class="h-4 mx-2" />
 
                         <button @click="close"
                             class="p-2 rounded-md text-neutral-400 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center"
@@ -101,12 +106,12 @@
                 <!-- Document Preview Canvas -->
                 <div class="flex-1 overflow-auto bg-neutral-900/10 dark:bg-neutral-900/30 view-bg">
                     <div class="min-h-full min-w-full flex py-10 px-8">
-                        <div class="transition-all duration-200 flex-shrink-0 m-auto"
-                             :style="{
-                                 width: `${600 * zoom / 100}px`,
-                                 height: `${docBaseHeight * zoom / 100}px`
-                             }">
-                            <div ref="docRef" class="bg-white rounded-xl shadow-lg transition-transform origin-top-left flex flex-col relative"
+                        <div class="transition-all duration-200 flex-shrink-0 m-auto" :style="{
+                            width: `${600 * zoom / 100}px`,
+                            height: `${docBaseHeight * zoom / 100}px`
+                        }">
+                            <div ref="docRef"
+                                class="bg-white rounded-xl shadow-lg transition-transform origin-top-left flex flex-col relative"
                                 :style="{
                                     width: '600px',
                                     minHeight: '800px',
@@ -119,14 +124,17 @@
                                     <div
                                         class="flex items-center gap-2 px-6 py-3 border-2 border-green-300/40 rounded-xl -rotate-2">
                                         <UIcon name="i-lucide-check-circle" class="size-5 text-green-500" />
-                                        <span class="text-sm text-green-600 font-bold tracking-widest uppercase">Verified</span>
+                                        <span
+                                            class="text-sm text-green-600 font-bold tracking-widest uppercase">Verified</span>
                                     </div>
                                 </div>
                                 <div v-if="currentDoc?.status === 'pending'"
                                     class="absolute bottom-12 left-0 right-0 flex justify-center pointer-events-none opacity-90">
-                                    <div class="flex items-center gap-2 px-6 py-3 border-2 border-amber-300/50 rounded-xl -rotate-2">
+                                    <div
+                                        class="flex items-center gap-2 px-6 py-3 border-2 border-amber-300/50 rounded-xl -rotate-2">
                                         <UIcon name="i-lucide-clock" class="size-5 text-amber-500" />
-                                        <span class="text-sm text-amber-600 tracking-widest font-bold uppercase">Pending Verification</span>
+                                        <span class="text-sm text-amber-600 tracking-widest font-bold uppercase">Pending
+                                            Verification</span>
                                     </div>
                                 </div>
 
@@ -152,19 +160,23 @@
                 <UTabs :items="[
                     { label: 'Details', slot: 'details' as const },
                     { label: 'Audit Trail', slot: 'history' as const },
-                ]" variant="link" class="w-full pt-5" :ui="{ trigger: 'w-full' }">
+                ]" variant="link" class="w-full pt-5" :ui="{ trigger: 'w-full', content: 'overflow-y-auto' }">
                     <template #details>
                         <div class="flex-1 overflow-y-auto px-6 py-6 space-y-8">
 
                             <!-- Verification Status -->
                             <UCard :ui="{ body: 'sm:p-4 space-y-3' }">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-xs font-semibold tracking-wider uppercase">Verification Status</span>
-                                    <UBadge :label="currentDoc?.status" :color="currentDoc?.status === 'verified' ? 'green' : currentDoc?.status === 'pending' ? 'yellow' : 'red'" variant="subtle" class="rounded-full capitalize tracking-wide" />
+                                    <span class="text-xs font-semibold tracking-wider uppercase">Verification
+                                        Status</span>
+                                    <UBadge :label="currentDoc?.status"
+                                        :color="currentDoc?.status === 'verified' ? 'green' : currentDoc?.status === 'pending' ? 'yellow' : 'red'"
+                                        variant="subtle" class="rounded-full capitalize tracking-wide" />
                                 </div>
 
                                 <div v-if="currentDoc?.status === 'verified'" class="flex items-start gap-3 mt-1">
-                                    <UBadge icon="i-lucide-check-circle" color="green" variant="soft" class="rounded-full p-2" />
+                                    <UBadge icon="i-lucide-check-circle" color="green" variant="soft"
+                                        class="rounded-full p-2" />
                                     <div>
                                         <div class="text-xs font-bold">Verified by {{
                                             currentDoc?.verifiedBy }}</div>
@@ -176,7 +188,8 @@
                                 </div>
 
                                 <div v-if="currentDoc?.status === 'pending'" class="flex items-start gap-3 mt-1">
-                                    <UBadge icon="i-lucide-clock" color="yellow" variant="soft" class="rounded-full p-2" />
+                                    <UBadge icon="i-lucide-clock" color="yellow" variant="soft"
+                                        class="rounded-full p-2" />
                                     <div>
                                         <div class="text-xs font-bold">Pending Verification</div>
                                         <div class="text-xs text-muted mt-0.5">{{
@@ -206,7 +219,7 @@
                                         <div>
                                             <div class="text-xs text-dimmed mb-0.5">Issuing Authority</div>
                                             <div class="text-xs font-semibold">{{ currentDoc?.issuingAuthority
-                                                }}</div>
+                                            }}</div>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-3">
@@ -226,7 +239,8 @@
                                         <div>
                                             <div class="text-xs text-dimmed mb-0.5">File Type</div>
                                             <div class="text-xs font-semibold">{{ currentDoc?.type }} &middot;
-                                                {{ currentDoc?.pages }} page{{ currentDoc?.pages !== 1 ? 's' : '' }}</div>
+                                                {{ currentDoc?.pages }} page{{ currentDoc?.pages !== 1 ? 's' : '' }}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-3">
@@ -271,8 +285,10 @@
 
                             <!-- Sticky Footer Actions -->
                             <div class="border-t border-default pt-4 space-y-3">
-                                <UButton label="Download Document" color="green" icon="i-lucide-download" size="lg" block />
-                                <UButton label="Flag Issue" color="red" icon="i-lucide-flag" size="lg" variant="soft" block />
+                                <UButton label="Download Document" color="green" icon="i-lucide-download" size="lg"
+                                    block />
+                                <UButton label="Flag Issue" color="red" icon="i-lucide-flag" size="lg" variant="soft"
+                                    block />
                             </div>
 
                         </div>
@@ -351,9 +367,9 @@ const hasNext = computed(() => currentIndex.value < viewableDocs.value.length - 
 
 const timelineItems = computed<TimelineEntry[]>(() => {
     if (!currentDoc.value) return []
-    
+
     const items: TimelineEntry[] = []
-    
+
     if (currentDoc.value.status === 'verified') {
         items.push({
             icon: 'i-lucide-check-circle',
@@ -364,7 +380,7 @@ const timelineItems = computed<TimelineEntry[]>(() => {
             description: currentDoc.value.remarks
         })
     }
-    
+
     items.push({
         icon: 'i-lucide-upload',
         color: 'blue',
@@ -372,7 +388,7 @@ const timelineItems = computed<TimelineEntry[]>(() => {
         actor: currentDoc.value.uploadedBy,
         date: currentDoc.value.uploadedDate
     })
-    
+
     return items
 })
 
