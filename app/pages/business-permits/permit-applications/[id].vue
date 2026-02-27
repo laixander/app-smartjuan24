@@ -325,7 +325,8 @@ const handleViewDocument = (doc: Document) => {
         </div> -->
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <UButton icon="i-lucide-arrow-left" color="neutral" variant="ghost" to="/business-permits/permit-applications" />
+                <UButton icon="i-lucide-arrow-left" color="neutral" variant="ghost"
+                    to="/business-permits/permit-applications" />
                 <div class="space-y-1">
                     <div class="flex items-center gap-2">
                         <UIcon name="i-lucide-building-2" class="size-5" />
@@ -430,13 +431,13 @@ const handleViewDocument = (doc: Document) => {
                     <template #owner-info>
                         <OwnerInfoCard v-if="ownerInfo" :owner="ownerInfo" />
                     </template>
-                    <template #business-details>
+    <template #business-details>
                         <BusinessDetailsCard v-if="businessDetails" :details="businessDetails" />
                     </template>
-                    <template #business-activity>
+    <template #business-activity>
                         <BusinessActivityCard v-if="businessActivities" :activities="businessActivities" />
                     </template>
-                </UTabs> -->
+</UTabs> -->
             </template>
             <template #documents>
                 <UCard>
@@ -460,7 +461,8 @@ const handleViewDocument = (doc: Document) => {
                         </div>
                     </template>
                     <div class="grid grid-cols-2 gap-2.5">
-                        <DocumentCard v-for="doc in task.documents" :key="doc.title" :document="doc" @view="handleViewDocument" />
+                        <DocumentCard v-for="doc in task.documents" :key="doc.title" :document="doc"
+                            @view="handleViewDocument" />
                     </div>
                 </UCard>
             </template>
@@ -485,7 +487,7 @@ const handleViewDocument = (doc: Document) => {
 
     <USlideover v-model:open="isOpen" :title="task?.title" description="Activity Timeline">
         <template #body>
-            <Timeline :items="dynamicTimeline" />
+            <Timeline :items="dynamicTimeline" hide-subtitle />
         </template>
     </USlideover>
 
@@ -497,7 +499,8 @@ const handleViewDocument = (doc: Document) => {
                     :ui="{ base: 'p-3 rounded-full' }" />
                 <div>
                     <h3 class="text-lg font-bold leading-none">Mayor's Decision</h3>
-                    <p class="text-sm font-normal text-dimmed mt-1 leading-none">Submit your final decision for this application</p>
+                    <p class="text-sm font-normal text-dimmed mt-1 leading-none">Submit your final decision for this
+                        application</p>
                 </div>
             </div>
         </template>
@@ -509,8 +512,8 @@ const handleViewDocument = (doc: Document) => {
                         :variant="decisionType === 'approve' ? 'soft' : 'ghost'" label="Approve"
                         icon="i-lucide-circle-check" block @click="decisionType = 'approve'" />
                     <UButton :color="decisionType === 'return' ? 'amber' : 'neutral'"
-                        :variant="decisionType === 'return' ? 'soft' : 'ghost'" label="Return"
-                        icon="i-lucide-undo-2" block @click="decisionType = 'return'" />
+                        :variant="decisionType === 'return' ? 'soft' : 'ghost'" label="Return" icon="i-lucide-undo-2"
+                        block @click="decisionType = 'return'" />
                     <UButton :color="decisionType === 'reject' ? 'red' : 'neutral'"
                         :variant="decisionType === 'reject' ? 'soft' : 'ghost'" label="Reject" icon="i-lucide-circle-x"
                         block @click="decisionType = 'reject'" />
@@ -521,14 +524,17 @@ const handleViewDocument = (doc: Document) => {
 
                 <div class="space-y-4">
                     <UFormField label="Remarks">
-                        <UTextarea v-model="remarks" placeholder="Add your remarks here..." class="w-full" :rows="4" autofocus />
+                        <UTextarea v-model="remarks" placeholder="Add your remarks here..." class="w-full" :rows="4"
+                            autofocus />
                     </UFormField>
 
-                    <UFormField label="Conditions (optional)">
-                        <UTextarea v-model="conditions" placeholder="e.g., Subject to environmental compliance..." class="w-full" :rows="3" />
-                    </UFormField>
+                    <!-- <UFormField label="Conditions (optional)">
+                        <UTextarea v-model="conditions" placeholder="e.g., Subject to environmental compliance..."
+                            class="w-full" :rows="3" />
+                    </UFormField> -->
 
-                    <UCard variant="subtle" :ui="{ root: 'rounded-lg', body: 'sm:p-4 flex items-center justify-between' }">
+                    <UCard variant="subtle"
+                        :ui="{ root: 'rounded-lg', body: 'sm:p-4 flex items-center justify-between' }">
                         <div class="flex items-center gap-3">
                             <UIcon name="i-lucide-signature" class="size-5 text-toned" />
                             <span class="text-sm font-bold text-toned">Affix Digital Signature</span>
@@ -536,12 +542,12 @@ const handleViewDocument = (doc: Document) => {
                         <USwitch v-model="affixSignature" color="neutral" />
                     </UCard>
 
-                    <div class="flex gap-2">
+                    <!-- <div class="flex gap-2">
                         <UButton icon="i-lucide-at-sign" label="Tag Dept" variant="soft" color="neutral" size="sm" />
                         <UButton icon="i-lucide-message-square-more" label="Request Info" variant="soft" color="neutral"
                             size="sm" />
                         <UButton icon="i-lucide-paperclip" label="Attach" variant="soft" color="neutral" size="sm" />
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </template>
@@ -554,5 +560,6 @@ const handleViewDocument = (doc: Document) => {
         </template>
     </UModal>
 
-    <DocumentPreview v-if="task?.documents" v-model="isPreviewOpen" :document="selectedDocItem" :documents="mappedDocuments" />
+    <DocumentPreview v-if="task?.documents" v-model="isPreviewOpen" :document="selectedDocItem"
+        :documents="mappedDocuments" />
 </template>

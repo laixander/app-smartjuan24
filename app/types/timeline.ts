@@ -6,6 +6,7 @@ export interface TimelineEntry {
     status?: 'completed' | 'pending' | 'rejected' | 'info'
     statusConfig?: { icon: string, color: string }
     title: string
+    subtitle?: string
     actor?: string
     date?: string
     description?: string

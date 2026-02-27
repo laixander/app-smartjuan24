@@ -220,7 +220,7 @@
                                         <div>
                                             <div class="text-xs text-dimmed mb-0.5">Issuing Authority</div>
                                             <div class="text-xs font-semibold">{{ currentDoc?.issuingAuthority
-                                            }}</div>
+                                                }}</div>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-3">
@@ -296,7 +296,7 @@
                     </template>
                     <template #history>
                         <div class="px-6 py-2">
-                            <Timeline :items="timelineItems" />
+                            <Timeline :items="timelineItems" hide-subtitle />
                         </div>
                     </template>
                 </UTabs>

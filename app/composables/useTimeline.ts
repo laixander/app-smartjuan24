@@ -23,7 +23,7 @@ export function useTimeline() {
         return configs[dept] || { icon: 'i-lucide-circle', color: 'neutral' }
     }
 
-    const mapReviewToTimeline = (review: DeptReview): TimelineEntry => {
+    const mapReviewToTimeline = (review: DeptReview, taskTitle?: string): TimelineEntry => {
         const config = getDeptConfig(review.department)
 
         let status: TimelineEntry['status'] = 'pending'
@@ -35,6 +35,7 @@ export function useTimeline() {
             color: config.color,
             status,
             title: `${review.department} Review`,
+            subtitle: taskTitle,
             actor: review.officer,
             date: formatDateTime(review.timestamp),
             description: review.remarks || 'Awaiting review'
@@ -51,6 +52,7 @@ export function useTimeline() {
             status: 'info',
             statusConfig: { icon: 'i-lucide-upload-cloud', color: 'text-blue-400' },
             title: 'Application Submitted',
+            subtitle: task.title,
             actor: 'System', // Could be dynamic if we had user info
             date: formatDateTime(task.submitted),
             description: `Online submission for ${task.permit}`
@@ -60,7 +62,7 @@ export function useTimeline() {
         if (task.reviews) {
             const reviewEntries = task.reviews
                 .filter(r => r.timestamp || r.status !== 'pending')
-                .map(mapReviewToTimeline)
+                .map(r => mapReviewToTimeline(r, task.title))
 
             timeline.push(...reviewEntries)
         }
@@ -72,6 +74,7 @@ export function useTimeline() {
                 color: 'green',
                 status: 'completed',
                 title: 'Application Approved',
+                subtitle: task.title,
                 actor: "Mayor's Office",
                 date: '', // No final timestamp in model yet
                 description: 'Final business permit issued'

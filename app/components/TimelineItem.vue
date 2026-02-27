@@ -5,6 +5,7 @@ import type { TimelineEntry } from '~/types/timeline'
 
 interface Props extends TimelineEntry {
     isLast?: boolean
+    hideSubtitle?: boolean
 }
 
 const props = defineProps<Props>()
@@ -32,6 +33,10 @@ const statusConfig = computed(() => {
         <div class="pb-8 space-y-1 min-w-0">
             <div class="text-sm font-semibold">
                 {{ title }}
+            </div>
+
+            <div v-if="!hideSubtitle && subtitle" class="text-xs font-medium text-primary">
+                {{ subtitle }}
             </div>
 
             <div v-if="actor" class="text-xs text-muted">

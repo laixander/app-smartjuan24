@@ -3,6 +3,7 @@ import type { TimelineEntry } from '~/types/timeline'
 
 interface Props {
     items: readonly TimelineEntry[]
+    hideSubtitle?: boolean
 }
 
 const props = defineProps<Props>()
@@ -10,6 +11,7 @@ const props = defineProps<Props>()
 
 <template>
     <div class="space-y-0">
-        <TimelineItem v-for="(item, index) in items" :key="index" v-bind="item" :is-last="index === items.length - 1" />
+        <TimelineItem v-for="(item, index) in items" :key="index" v-bind="item" :is-last="index === items.length - 1"
+            :hide-subtitle="hideSubtitle" />
     </div>
 </template>
