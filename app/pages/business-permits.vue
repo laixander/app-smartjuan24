@@ -1,30 +1,3 @@
-<script setup lang="ts">
-const { openSlideover } = useWorkflowSlideover()
-
-import type { NavigationMenuItem } from '@nuxt/ui'
-const route = useRoute()
-const links = computed(() => [[{
-  label: 'Dashboard',
-  icon: 'i-lucide-chart-line',
-  to: '/business-permits/',
-  exact: true
-}, {
-  label: 'Permit Applications',
-  icon: 'i-lucide-workflow',
-  to: '/business-permits/permit-applications',
-  active: route.path.startsWith('/business-permits/permit-applications')
-}, {
-  label: 'Business Registry',
-  icon: 'i-lucide-database',
-  to: '/business-permits/business-registry'
-}], [{
-  label: 'Documentation',
-  icon: 'i-lucide-book-open',
-  to: '/documentation',
-  target: '_blank'
-}]] satisfies NavigationMenuItem[][])
-</script>
-
 <template>
     <UDashboardPanel>
         <template #header>
@@ -63,7 +36,7 @@ const links = computed(() => [[{
                         </UTooltip>
                     </UFieldGroup>
                 </template> -->
-<UNavigationMenu :items="links" highlight class="-mx-1 flex-1" />
+                <UNavigationMenu :items="links" highlight class="-mx-1 flex-1" />
             </UDashboardToolbar>
         </template>
         <template #body>
@@ -71,3 +44,29 @@ const links = computed(() => [[{
         </template>
     </UDashboardPanel>
 </template>
+<script setup lang="ts">
+const { openSlideover } = useWorkflowSlideover()
+
+import type { NavigationMenuItem } from '@nuxt/ui'
+const route = useRoute()
+const links = computed(() => [[{
+    label: 'Dashboard',
+    icon: 'i-lucide-chart-line',
+    to: '/business-permits/',
+    exact: true
+}, {
+    label: 'Permit Applications',
+    icon: 'i-lucide-workflow',
+    to: '/business-permits/permit-applications',
+    active: route.path.startsWith('/business-permits/permit-applications')
+}, {
+    label: 'Business Registry',
+    icon: 'i-lucide-database',
+    to: '/business-permits/business-registry'
+}], [{
+    label: 'Documentation',
+    icon: 'i-lucide-book-open',
+    to: '/documentation',
+    target: '_blank'
+}]] satisfies NavigationMenuItem[][])
+</script>
