@@ -105,7 +105,7 @@ onUnmounted(() => {
 
 <template>
     <UCard>
-        <div class="mb-4">
+        <div class="mb-8">
             <h3 class="text-lg font-bold text-toned">
                 Industry Breakdown
             </h3>
@@ -114,13 +114,14 @@ onUnmounted(() => {
             </p>
         </div>
 
-        <div class="flex flex-col items-center">
-            <div class="h-48 w-48 relative mb-8">
+        <div class="flex justify-around items-center">
+            <div class="h-60 w-60 relative">
                 <canvas ref="canvasRef"></canvas>
             </div>
 
-            <div class="w-full space-y-3">
-                <div v-for="industry in industries" :key="industry.label" class="flex items-center justify-between">
+            <div class="space-y-3">
+                <div v-for="industry in industries" :key="industry.label"
+                    class="flex items-center justify-between gap-12">
                     <div class="flex items-center gap-3">
                         <div class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: industry.color }"></div>
                         <span class="text-sm text-toned">{{ industry.label }}</span>

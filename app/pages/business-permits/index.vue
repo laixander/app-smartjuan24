@@ -4,9 +4,11 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        <PermitPipeline class="lg:col-span-3" />
-        <IndustryBreakdown />
-        <MonthlyApplications class="lg:col-span-3" />
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:col-span-3">
+            <PermitPipeline />
+            <IndustryBreakdown />
+            <MonthlyApplications class="lg:col-span-2" />
+        </div>
         <RecentActivity />
     </div>
 </template>

@@ -29,7 +29,7 @@ const activities = computed(() => {
 </script>
 
 <template>
-    <UCard :ui="{ body: 'px-4 py-5', header: 'px-4 py-5 border-none' }" class="h-full">
+    <UCard>
         <template #header>
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-bold">Recent Activity</h3>

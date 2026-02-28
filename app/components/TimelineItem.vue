@@ -30,7 +30,7 @@ const statusConfig = computed(() => {
         </div>
 
         <!-- Content -->
-        <div class="pb-8 space-y-1 min-w-0">
+        <div :class="[isLast ? 'pb-0' : 'pb-8', 'space-y-1 min-w-0']">
             <div class="text-sm font-semibold">
                 {{ title }}
             </div>

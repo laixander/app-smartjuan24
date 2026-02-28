@@ -553,8 +553,9 @@ const handleViewDocument = (doc: Document) => {
         </template>
         <template #footer>
             <div class="flex w-full gap-2">
-                <UButton color="neutral" variant="ghost" label="Cancel" @click="isDecisionModalOpen = false" />
-                <UButton block :color="decisionConfig.color" :label="decisionConfig.buttonLabel"
+                <UButton color="neutral" variant="ghost" size="lg" label="Cancel"
+                    @click="isDecisionModalOpen = false" />
+                <UButton block size="lg" :color="decisionConfig.color" :label="decisionConfig.buttonLabel"
                     :icon="decisionConfig.icon" @click="handleConfirmDecision" />
             </div>
         </template>
