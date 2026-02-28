@@ -114,14 +114,14 @@ onUnmounted(() => {
             </p>
         </div>
 
-        <div class="flex justify-around items-center">
-            <div class="h-60 w-60 relative">
+        <div class="flex justify-around items-center gap-4">
+            <div class="h-48 w-48 relative">
                 <canvas ref="canvasRef"></canvas>
             </div>
 
             <div class="space-y-3">
                 <div v-for="industry in industries" :key="industry.label"
-                    class="flex items-center justify-between gap-12">
+                    class="flex items-center justify-between gap-8">
                     <div class="flex items-center gap-3">
                         <div class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: industry.color }"></div>
                         <span class="text-sm text-toned">{{ industry.label }}</span>
