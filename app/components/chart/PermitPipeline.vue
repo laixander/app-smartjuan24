@@ -120,7 +120,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <UCard>
+    <UCard :ui="{ body: 'lg:flex flex-col lg:h-full' }">
         <div class="flex justify-between items-start mb-6">
             <div>
                 <h3 class="text-lg font-bold text-toned">
@@ -134,9 +134,11 @@ onUnmounted(() => {
                 51 total applications
             </UBadge>
         </div>
+        <div class="flex-1 flex items-center justify-center">
 
-        <div class="h-64 mt-4">
-            <canvas ref="canvasRef"></canvas>
+            <div class="w-full h-64">
+                <canvas ref="canvasRef"></canvas>
+            </div>
         </div>
     </UCard>
 </template>

@@ -104,8 +104,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <UCard>
-        <div class="mb-8">
+    <UCard :ui="{ body: 'flex flex-col h-full' }">
+        <div class="mb-6">
             <h3 class="text-lg font-bold text-toned">
                 Industry Breakdown
             </h3>
@@ -114,7 +114,7 @@ onUnmounted(() => {
             </p>
         </div>
 
-        <div class="flex justify-around items-center gap-4">
+        <div class="flex justify-around items-center gap-4 flex-1">
             <div class="h-48 w-48 relative">
                 <canvas ref="canvasRef"></canvas>
             </div>
