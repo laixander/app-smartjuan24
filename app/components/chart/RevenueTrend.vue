@@ -1,5 +1,5 @@
 <template>
-    <UCard>
+    <UCard :ui="{ body: 'lg:flex flex-col lg:h-full' }">
         <div class="flex justify-between items-center mb-4">
             <div>
                 <h3 class="text-lg font-bold text-toned">
@@ -11,9 +11,10 @@
             </div>
             <USelect v-model="value" :items="items" class="w-48" />
         </div>
-
-        <div class="h-72">
-            <canvas ref="canvasRef"></canvas>
+        <div class="flex-1 flex items-center justify-center">
+            <div class="w-full h-72">
+                <canvas ref="canvasRef"></canvas>
+            </div>
         </div>
     </UCard>
 </template>
