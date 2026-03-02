@@ -1,3 +1,5 @@
+// /types/workflow.ts
+
 import type { BadgeProps } from '@nuxt/ui'
 
 export type WorkflowStepStatus = 'done' | 'pending' | 'waiting'

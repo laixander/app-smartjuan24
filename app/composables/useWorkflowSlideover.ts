@@ -1,4 +1,6 @@
-export const useWorkflowSlideover = () => {
+// /composables/useWorkflowSlideover.ts
+
+export function useWorkflowSlideover() {
     const isOpen = useState('workflow-slideover-open', () => false)
 
     const openSlideover = () => {

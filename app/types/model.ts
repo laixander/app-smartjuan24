@@ -1,17 +1,23 @@
 // /types/model.ts
 
+// ── Kanban / Workflow status ──────────────────────────────────────
+
 export type ColumnKey =
     | 'assessment'
     | 'processing'
     | 'approval'
     | 'done'
 
+export type TaskType = 'renewal' | 'new'
+
+// ── Task (top-level aggregate) ────────────────────────────────────
+
 export interface Task {
     id: number
     title: string
     description?: string
     status: ColumnKey
-    type: 'renewal' | 'new'
+    type: TaskType
     aging: number
     permit: string
     submitted: string
@@ -26,6 +32,8 @@ export interface Task {
     paymentInfo?: PaymentInfo
 }
 
+// ── Department review ─────────────────────────────────────────────
+
 export type DeptReviewStatus = 'cleared' | 'pending' | 'with issue'
 
 export interface DeptReview {
@@ -35,16 +43,21 @@ export interface DeptReview {
     timestamp: string
     remarks: string
 }
+
+// ── Owner & business information ──────────────────────────────────
+
+export interface OwnerLocation {
+    name: string
+    image: string
+}
+
 export interface OwnerInfo {
     fullName: string
     contactNumber: string
     email: string
     nationality: string
     address: string
-    location: {
-        name: string
-        image: string
-    }
+    location: OwnerLocation
 }
 
 export interface BusinessDetails {
@@ -67,6 +80,8 @@ export interface BusinessActivity {
     capitalization: number
 }
 
+// ── Documents ─────────────────────────────────────────────────────
+
 export type DocumentStatus = 'Verified' | 'Pending' | 'Missing'
 
 export interface Document {
@@ -76,23 +91,12 @@ export interface Document {
     icon?: string
 }
 
-export interface FeeItem {
-    description: string
-    amount: number
-}
-
-export interface PaymentInfo {
-    status: string
-    orNumber: string
-    paymentDate: string
-    paymentMode: string
-    amountPaid: number
-}
+export type DocItemStatus = 'verified' | 'pending' | 'missing'
 
 export interface DocItem {
     id: string
     name: string
-    status: 'verified' | 'pending' | 'missing'
+    status: DocItemStatus
     verifiedBy: string
     type: string
     fileSize: string
@@ -104,4 +108,21 @@ export interface DocItem {
     issuingAuthority: string
     validUntil: string
     remarks: string
+}
+
+// ── Fees & payments ───────────────────────────────────────────────
+
+export interface FeeItem {
+    description: string
+    amount: number
+}
+
+export type PaymentStatus = 'Fully Paid' | 'Unpaid'
+
+export interface PaymentInfo {
+    status: PaymentStatus
+    orNumber: string
+    paymentDate: string
+    paymentMode: string
+    amountPaid: number
 }

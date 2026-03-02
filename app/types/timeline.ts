@@ -1,3 +1,5 @@
+// /types/timeline.ts
+
 import type { BadgeProps } from '@nuxt/ui'
 
 export interface TimelineEntry {
