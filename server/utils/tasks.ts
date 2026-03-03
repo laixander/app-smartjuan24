@@ -31,6 +31,7 @@ export const tasks: Task[] = [
         permit: 'Business Permit',
         submitted: '02/16/2026',
         industry: 'Retail',
+        bin: 'BIN-001601',
         reviews: createReviews([
             { status: 'cleared', timestamp: '2026-02-16 14:20', remarks: 'Application form and IDs verified.' },
             { status: 'cleared', timestamp: '2026-02-16 15:00', remarks: 'Previous taxes settled.' },
@@ -96,6 +97,7 @@ export const tasks: Task[] = [
         permit: 'Building Permit',
         submitted: '02/15/2026',
         industry: 'Food & Beverage',
+        bin: 'BIN-001602',
         reviews: createReviews([
             { status: 'cleared', timestamp: '2026-02-15 10:00', remarks: 'New branch paperwork submitted.' },
             { status: 'cleared', timestamp: '2026-02-15 11:30', remarks: 'Assessment fees paid.' },
@@ -164,6 +166,7 @@ export const tasks: Task[] = [
         permit: 'Mayor\'s Permit',
         submitted: '02/10/2026',
         industry: 'Retail',
+        bin: 'BIN-001603',
         reviews: createReviews([
             { status: 'cleared', timestamp: '2026-02-10 09:00', remarks: 'Doc requirements complete.' },
             { status: 'cleared', timestamp: '2026-02-10 10:30', remarks: 'Gross receipts verified.' },
@@ -231,6 +234,7 @@ export const tasks: Task[] = [
         permit: 'Business Permit',
         submitted: '02/14/2026',
         industry: 'Pharmacy',
+        bin: 'BIN-001604',
         reviews: createReviews([
             { status: 'cleared', timestamp: '2026-02-14 08:30', remarks: 'FDA License verified.' },
             { status: 'cleared', timestamp: '2026-02-14 09:15', remarks: 'Taxes paid for current year.' },
@@ -297,6 +301,7 @@ export const tasks: Task[] = [
         permit: 'Sanitary Permit',
         submitted: '02/12/2026',
         industry: 'Energy',
+        bin: 'BIN-001605',
         reviews: createReviews([
             { status: 'cleared', timestamp: '2026-02-12 09:00', remarks: 'DOE clearance attached.' },
             { status: 'cleared', timestamp: '2026-02-12 10:00', remarks: 'Payment confirmed.' },
@@ -363,6 +368,7 @@ export const tasks: Task[] = [
         permit: 'Business Permit',
         submitted: '02/01/2026',
         industry: 'Retail',
+        bin: 'BIN-001606',
         reviews: createReviews([
             { status: 'cleared', timestamp: '2026-02-01 09:00', remarks: 'Franchise docs OK.' },
             { status: 'cleared', timestamp: '2026-02-01 10:00', remarks: 'All fees settled.' },

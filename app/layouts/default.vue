@@ -45,6 +45,11 @@ const items: NavigationMenuItem[][] = [
                 to: '/business-permits'
             },
             {
+                label: 'Real Property',
+                icon: 'i-lucide-map-pin',
+                to: '/real-property'
+            },
+            {
                 label: 'Applications',
                 icon: 'i-lucide-app-window'
             },

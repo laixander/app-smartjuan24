@@ -2,47 +2,45 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard v-for="stat in stats" :key="stat.title" v-bind="stat" orientation="horizontal" />
     </div>
-
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:col-span-3">
-            <PermitPipeline />
-            <IndustryBreakdown />
-            <MonthlyApplications class="lg:col-span-2" />
+            <AssessmentPipeline />
+            <ClassificationBreakdown />
+            <MonthlyAssessments class="lg:col-span-2" />
         </div>
-        <RecentActivity />
+        <!-- Recent Activity -->
     </div>
 </template>
-
 <script setup lang="ts">
-import PermitPipeline from '~/components/chart/PermitPipeline.vue';
-import IndustryBreakdown from '~/components/chart/IndustryBreakdown.vue';
-import MonthlyApplications from '~/components/chart/MonthlyApplications.vue';
+import AssessmentPipeline from '~/components/chart/AssessmentPipeline.vue';
+import ClassificationBreakdown from '~/components/chart/ClassificationBreakdown.vue';
+import MonthlyAssessments from '~/components/chart/MonthlyAssessments.vue';
 const stats = [
     {
-        title: "Total Businesses",
-        value: 5860,
+        title: "Total Properties",
+        value: 8,
         subtitle: "registered",
-        icon: "i-lucide-building-2",
+        icon: "i-lucide-map-pin",
         color: "blue",
     },
     {
-        title: "Active Permits",
-        value: 5412,
+        title: "Completed Assessments",
+        value: 2,
         subtitle: "this month",
         icon: "i-lucide-file-check",
         color: "green"
     },
     {
-        title: "Pending Applications",
-        value: 47,
+        title: "In Pipeline",
+        value: 5,
         subtitle: "awaiting action",
         icon: "i-lucide-clock",
         color: "purple"
     },
     {
-        title: "Revenue (YTD)",
-        value: "₱42.8M",
-        subtitle: "vs last year",
+        title: "Total Assessed Value",
+        value: "₱12.4M",
+        subtitle: "Cumulative valuation",
         icon: "i-lucide-philippine-peso",
         color: "orange"
     },

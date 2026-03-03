@@ -109,13 +109,13 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 py-3 mt-1 bg-muted rounded-lg divide-x divide-neutral-200 dark:divide-neutral-700/50">
-                        <div class="px-3 space-y-1 text-xs">
+                    <div class="grid grid-cols-2 gap-3 *:p-3 *:bg-neutral-50 *:dark:bg-neutral-800/50 *:rounded-lg *:space-y-1 *:text-xs">
+                        <div>
                             <p class="font-medium text-dimmed">Permit No.</p>
                             <p class="font-bold text-green">{{ item.permitNo }}</p>
                             <p class="text-dimmed">Exp: {{ item.permitExp }}</p>
                         </div>
-                        <div class="px-3 space-y-1 text-xs">
+                        <div>
                             <p class="font-medium text-dimmed">Released</p>
                             <p class="font-semibold text-default">{{ item.releasedDate }}</p>
                             <p class="text-dimmed">{{ item.releasedTime }}</p>

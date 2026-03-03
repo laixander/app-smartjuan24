@@ -42,15 +42,20 @@ const {
     onDragLeave,
     onDrop
 } = useKanbanDrag(tasks)
+
+const mouseHoveredColumn = ref<ColumnKey | null>(null)
 </script>
 
 <template>
     <div class="flex overflow-x-auto h-[calc(100vh-150px)] pb-2 gap-4">
         <div v-for="column in columns" :key="column.key" class="min-w-[320px] min-h-0 overflow-y-auto flex flex-col gap-2 rounded-lg transition-colors duration-200"
             :class="{
-                'bg-neutral-100 dark:bg-neutral-800':
-                    hoveredColumn === column.key
-            }" @dragover.prevent="onDragOver(column.key)" @dragleave="onDragLeave" @drop="onDrop(column.key)" @scroll="onColumnScroll($event, column.key)">
+                'bg-neutral-100 dark:bg-neutral-800': hoveredColumn === column.key,
+                'bg-neutral-50 dark:bg-neutral-800/40': mouseHoveredColumn === column.key && hoveredColumn !== column.key
+            }"
+            @mouseenter="mouseHoveredColumn = column.key"
+            @mouseleave="mouseHoveredColumn = null"
+            @dragover.prevent="onDragOver(column.key)" @dragleave="onDragLeave" @drop="onDrop(column.key)" @scroll="onColumnScroll($event, column.key)">
             <div class="flex justify-between items-center p-3 sticky top-0 z-10"
                 :class="{ 'bg-default shadow-md': columnScrollStates[column.key] }">
                 <h3 class="font-bold text-sm uppercase">

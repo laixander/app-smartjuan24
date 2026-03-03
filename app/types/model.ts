@@ -22,6 +22,7 @@ export interface Task {
     permit: string
     submitted: string
     industry: string
+    bin?: string
     reviews?: DeptReview[]
     ownerInfo?: OwnerInfo
     businessDetails?: BusinessDetails
@@ -125,4 +126,29 @@ export interface PaymentInfo {
     paymentDate: string
     paymentMode: string
     amountPaid: number
+}
+
+// ── Real Property Assessment ─────────────────────────────────────
+
+export type RptColumnKey =
+    | 'draft'
+    | 'for-review'
+    | 'dept-clearance'
+    | 'inspection'
+    | 'evaluation'
+    | 'assessment'
+    | 'completed'
+
+export type PropertyType = 'Residential' | 'Commercial' | 'Agricultural' | 'Industrial'
+
+export interface PropertyAssessment {
+    id: number
+    rptNumber: string
+    ownerName: string
+    location: string
+    engineer: string
+    propertyType: PropertyType
+    status: RptColumnKey
+    date: string
+    toNumber?: string
 }

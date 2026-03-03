@@ -166,7 +166,7 @@ const dynamicTabs = computed(() => {
             }
         }
         if (tab.slot === 'fees-payment') {
-            const isPaid = paymentInfo.value?.status === 'Fully Paid' || paymentInfo.value?.status === 'Paid'
+            const isPaid = paymentInfo.value?.status === 'Fully Paid'
             const label = isPaid ? 'Paid' : 'Unpaid'
             return {
                 ...tab,
@@ -193,7 +193,7 @@ const dynamicSteps = computed(() => {
             }
         }
         if (step.title === 'Payment') {
-            const isPaid = paymentInfo.value?.status === 'Fully Paid' || paymentInfo.value?.status === 'Paid'
+            const isPaid = paymentInfo.value?.status === 'Fully Paid'
             return {
                 ...step,
                 description: paymentInfo.value?.status ?? 'Unpaid',
