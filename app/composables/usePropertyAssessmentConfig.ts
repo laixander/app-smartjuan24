@@ -40,5 +40,11 @@ export function usePropertyAssessmentConfig() {
         'completed': 'bg-green-400'
     }
 
-    return { propertyTypeBadge, columnLabels, columnColors, columnDotColors }
+    function getAgingConfig(days: number) {
+        if (days < 5) return { color: 'primary' as const, icon: 'i-lucide-calendar', class: 'text-primary-500' }
+        if (days < 10) return { color: 'yellow' as const, icon: 'i-lucide-circle-alert', class: 'text-yellow-500' }
+        return { color: 'red' as const, icon: 'i-lucide-circle-alert', class: 'text-red-500' }
+    }
+
+    return { propertyTypeBadge, columnLabels, columnColors, columnDotColors, getAgingConfig }
 }

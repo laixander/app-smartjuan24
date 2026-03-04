@@ -55,7 +55,7 @@ const mouseHoveredColumn = ref<RptColumnKey | null>(null)
 </script>
 
 <template>
-    <div class="flex overflow-x-auto h-[calc(100vh-150px)] pb-2 gap-4">
+    <div class="flex overflow-x-auto h-[calc(100vh-230px)] pb-2 gap-4">
         <div
             v-for="column in columns"
             :key="column.key"

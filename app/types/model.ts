@@ -141,6 +141,58 @@ export type RptColumnKey =
 
 export type PropertyType = 'Residential' | 'Commercial' | 'Agricultural' | 'Industrial'
 
+export interface PropertyOwnerInfo {
+    fullName: string
+    contactNumber: string
+    email: string
+    address: string
+    tin: string
+}
+
+export interface PropertyDetails {
+    lotNumber: string
+    blockNumber: string
+    surveyNumber: string
+    titleNumber: string
+    landArea: number
+    landAreaUnit: string
+    barangay: string
+    municipality: string
+    province: string
+    classification: string
+}
+
+export interface PropertyAppraisal {
+    marketValue: number
+    assessedValue: number
+    assessmentLevel: number
+    taxableValue: number
+    annualTax: number
+    effectivityYear: number
+}
+
+export interface PropertyInspection {
+    inspectedBy: string
+    inspectionDate: string
+    findings: string
+    recommendation: string
+}
+
+export interface PropertyDocument {
+    title: string
+    status: 'Verified' | 'Pending' | 'Missing'
+    verifiedBy?: string
+    icon?: string
+}
+
+export interface PropertyTimeline {
+    date: string
+    event: string
+    actor: string
+    icon?: string
+    color?: string
+}
+
 export interface PropertyAssessment {
     id: number
     rptNumber: string
@@ -149,6 +201,14 @@ export interface PropertyAssessment {
     engineer: string
     propertyType: PropertyType
     status: RptColumnKey
+    aging: number
     date: string
     toNumber?: string
+    // Detail fields (only populated in [id] endpoint)
+    ownerInfo?: PropertyOwnerInfo
+    propertyDetails?: PropertyDetails
+    appraisal?: PropertyAppraisal
+    inspection?: PropertyInspection
+    documents?: PropertyDocument[]
+    timeline?: PropertyTimeline[]
 }

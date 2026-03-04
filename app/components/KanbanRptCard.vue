@@ -11,7 +11,7 @@ const emit = defineEmits<{
     (e: 'dragstart', assessment: PropertyAssessment): void
 }>()
 
-const { propertyTypeBadge } = usePropertyAssessmentConfig()
+const { propertyTypeBadge, getAgingConfig } = usePropertyAssessmentConfig()
 </script>
 
 <template>
@@ -47,9 +47,12 @@ const { propertyTypeBadge } = usePropertyAssessmentConfig()
             </div>
         </div>
 
-        <!-- Date + optional TO number -->
+        <!-- Aging + optional TO number -->
         <div class="flex justify-between items-center pt-0.5">
-            <span class="text-xs text-dimmed">{{ assessment.date }}</span>
+            <span :class="getAgingConfig(assessment.aging).class" class="text-xs font-semibold flex items-center gap-1">
+                <UIcon :name="getAgingConfig(assessment.aging).icon" />
+                {{ assessment.aging }} Days
+            </span>
             <UBadge v-if="assessment.toNumber"
                 :label="assessment.toNumber"
                 color="green"
