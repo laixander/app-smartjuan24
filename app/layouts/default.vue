@@ -31,13 +31,19 @@ const items: NavigationMenuItem[][] = [
     [
         [
             {
-                label: 'Main',
+                label: 'Overview',
                 type: 'label'
             },
             {
                 label: 'Executive Dashboard',
                 icon: 'i-lucide-pie-chart',
                 to: '/'
+            }
+        ],
+        [
+            {
+                label: 'Modules',
+                type: 'label'
             },
             {
                 label: 'Business Permits',
@@ -48,14 +54,6 @@ const items: NavigationMenuItem[][] = [
                 label: 'Real Property',
                 icon: 'i-lucide-map-pin',
                 to: '/real-property'
-            },
-            {
-                label: 'Applications',
-                icon: 'i-lucide-app-window'
-            },
-            {
-                label: 'Business Registry',
-                icon: 'i-lucide-scroll-text'
             }
         ],
         [
@@ -64,8 +62,29 @@ const items: NavigationMenuItem[][] = [
                 type: 'label'
             },
             {
-                label: 'Configuration',
-                icon: 'i-lucide-settings-2'
+                label: 'Departments',
+                icon: 'i-lucide-landmark',
+                to: '/departments'
+            },
+            {
+                label: 'Permit Types',
+                icon: 'i-lucide-list-checks',
+                to: '/permit-types'
+            },
+            {
+                label: 'Line of Business',
+                icon: 'i-lucide-layers',
+                to: '/line-of-business'
+            },
+            {
+                label: 'Requirements Library',
+                icon: 'i-lucide-book-open',
+                to: '/requirements-library'
+            },
+            {
+                label: 'References',
+                icon: 'i-lucide-bookmark',
+                to: '/references'
             }
         ],
         [

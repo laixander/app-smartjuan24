@@ -2,7 +2,7 @@
     <div class="space-y-4">
         <div class="flex items-center justify-between">
             <UInput v-model="globalFilter" placeholder="Search..." icon="i-lucide-search" variant="outline"
-                class="w-80" />
+                class="w-80" size="lg" />
             <UTabs v-model="activeTab" :content="false" :items="[
                 {
                     icon: 'i-lucide-list',

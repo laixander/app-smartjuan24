@@ -1,12 +1,12 @@
 <template>
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <UInput placeholder="Search..." icon="i-lucide-search" class="w-80" />
+            <UInput placeholder="Search..." icon="i-lucide-search" class="w-80" size="lg" />
             <USelect
                 :default-value="'All'"
                 :items="['All', 'Residential', 'Commercial', 'Agricultural', 'Industrial']"
             class="data-[state=open]:bg-elevated w-36"
-            :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }" />
+            :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }" size="lg" />
         </div>
         <UTabs v-model="activeTab" :content="false" :items="items" :ui="{ list: 'w-auto' }" class="w-auto" />
     </div>

@@ -8,7 +8,7 @@
             <ClassificationBreakdown />
             <MonthlyAssessments class="lg:col-span-2" />
         </div>
-        <!-- Recent Activity -->
+        <RecentActivityRpt />
     </div>
 </template>
 <script setup lang="ts">
